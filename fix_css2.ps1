@@ -1,0 +1,9 @@
+$content = Get-Content "src/features/home/about/about.css" -Raw
+
+$old = "WilbertBuildsAI brand logo " + [char]0x2014 + " dedicated wider container for horizontal wordmark */`n.ab__cred-logo {`n  display: grid;`n  place-items: center;`n  width: 124px;`n  height: 58px;`n  flex: none;`n  border-radius: 8px;`n  background: #FFFFFF;`n  border: 1px solid var(--line);`n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 1px rgba(0, 0, 0, 0.03);`n  overflow: hidden;`n}`n`n@media (min-width: 1024px) {`n  .ab__cred-logo {`n    width: 134px;`n    height: 62px;`n  }`n}`n`n.ab__cred-logo > img {`n  display: block;`n  width: 100%;`n  height: 100%;`n  max-width: 100%;`n  max-height: 100%;`n  object-fit: contain;`n  object-position: center;`n}`n`n/* Ensure white tile background in both light and dark modes for credentials */`n@media (prefers-color-scheme: dark) {`n  .ab__cred-mark,`n  .ab__cred-logo {`n    background: #FFFFFF;`n    border-color: var(--line);`n  }`n}"
+
+$new = "WilbertBuildsAI brand logo " + [char]0x2014 + " original transparent PNG with theme-aware switching */`n.ab__cred-logo {`n  display: block;`n  width: 160px;`n  flex: none;`n  /* Height is auto, determined by image aspect ratio */`n  background: transparent;`n  border: none;`n  box-shadow: none;`n  overflow: visible;`n}`n`n@media (min-width: 1024px) {`n  .ab__cred-logo {`n    width: 170px;`n  }`n}`n`n.ab__cred-logo > img {`n  display: block;`n  width: 100%;`n  height: auto;`n  object-fit: contain;`n}`n`n/* Theme-aware logo switching handled by global .only-light / .only-dark rules */"
+
+$content = $content.Replace($old, $new)
+Set-Content "src/features/home/about/about.css" $content -NoNewline
+Write-Host "Done"

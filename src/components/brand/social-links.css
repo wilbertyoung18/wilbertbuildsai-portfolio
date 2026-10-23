@@ -1,0 +1,139 @@
+/*
+ * The social keys (SocialLinks.tsx), shared by the sidebar header and Contact. No tile per key: the five
+ * marks share one quiet plate in grey. A soft key rises under the one you point at (scale + fade on the
+ * spring) and the mark takes its brand colour. Each key is a 44px target; five fit the 240px header.
+ */
+
+.social-keys {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 3px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+  list-style: none;
+}
+
+.social-key {
+  --brand: var(--ink);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: var(--ink-2);
+  transition: color 160ms ease;
+}
+.social-key[data-icon='facebook'] {
+  --brand: var(--brand-facebook);
+}
+.social-key[data-icon='linkedin'] {
+  --brand: var(--brand-linkedin);
+}
+.social-key[data-icon='discord'] {
+  --brand: var(--brand-discord);
+}
+.social-key[data-icon='github'] {
+  --brand: var(--brand-github);
+}
+.social-key[data-icon='x'] {
+  --brand: var(--brand-x);
+}
+.social-key[data-icon='upwork'] {
+  --brand: var(--brand-upwork);
+}
+.social-key[data-icon='onlinejobsph'] {
+  --brand: var(--brand-onlinejobsph);
+}
+/* The soft key under the pointer. */
+.social-key::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.86);
+  transition:
+    opacity 160ms ease,
+    transform var(--dur-fast) var(--ease-spring);
+}
+.social-key > :is(svg, img) {
+  position: relative;
+  transition:
+    transform var(--dur-fast) var(--ease-spring),
+    filter 160ms ease,
+    opacity 160ms ease;
+}
+.social-key img {
+  width: 20px;
+  height: 20px;
+  filter: grayscale(1) contrast(0.9);
+  opacity: 0.7;
+}
+.social-key:is(:hover, :focus-visible) {
+  color: var(--brand);
+}
+.social-key:is(:hover, :focus-visible)::before {
+  opacity: 1;
+  transform: none;
+}
+.social-key:is(:hover, :focus-visible) img {
+  filter: none;
+  opacity: 1;
+}
+.social-key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+/* Press: the key and the mark give a little, on the press itself. */
+.social-key:active::before,
+.social-key:active > :is(svg, img) {
+  transform: scale(0.94);
+}
+
+/* OnlineJobsPH: theme-specific contrast.
+   - Light mode: darken the logo for contrast on light background.
+   - Dark mode: make the logo white for visibility on dark background. */
+@media (prefers-color-scheme: light) {
+  .social-key[data-icon='onlinejobsph'] img {
+    filter: brightness(0) contrast(3);
+    opacity: 0.7;
+  }
+  .social-key[data-icon='onlinejobsph']:is(:hover, :focus-visible) img {
+    filter: brightness(0) contrast(3);
+    opacity: 1;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .social-key[data-icon='onlinejobsph'] img {
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+  .social-key[data-icon='onlinejobsph']:is(:hover, :focus-visible) img {
+    filter: brightness(0) invert(1);
+    opacity: 1;
+  }
+}
+
+/* Also handle explicit theme switching via data-theme attribute. */
+[data-theme='light'] .social-key[data-icon='onlinejobsph'] img {
+  filter: brightness(0) contrast(3);
+  opacity: 0.7;
+}
+[data-theme='light'] .social-key[data-icon='onlinejobsph']:is(:hover, :focus-visible) img {
+  filter: brightness(0) contrast(3);
+  opacity: 1;
+}
+[data-theme='dark'] .social-key[data-icon='onlinejobsph'] img {
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}
+[data-theme='dark'] .social-key[data-icon='onlinejobsph']:is(:hover, :focus-visible) img {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}

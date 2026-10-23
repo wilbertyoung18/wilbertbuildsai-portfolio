@@ -1,0 +1,935 @@
+/*
+ * Home About, "The floor". The lead and image sit side by side on a hairline
+ * floor that runs edge to edge. Below 761px of column the picture drops under the lead.
+ */
+
+.ab {
+  --gutter: clamp(16px, 3.5vw, 56px);
+  container-type: inline-size;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(72px, 12vh, 128px) var(--gutter);
+  /* The phone top bar is sticky, so a jump to #about lands below it. */
+  scroll-margin-top: 56px;
+}
+@media (min-width: 1024px) {
+  .ab {
+    scroll-margin-top: 0;
+  }
+}
+
+.ab__lede {
+  margin: 18px 0 0;
+  max-width: 52ch;
+  color: var(--ink-2);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+/* ---------- The floor ---------- */
+
+.ab__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 40%) minmax(0, 55%);
+  gap: clamp(40px, 5vw, 48px);
+  align-items: start;
+  min-height: clamp(380px, 45cqi, 520px);
+  margin: clamp(40px, 7vh, 64px) 0 0;
+  padding-bottom: clamp(8px, 2vh, 16px);
+}
+
+/* The floor: a hairline edge to edge, drawn out from under the picture once it has landed. */
+.ab__stage::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: var(--line-strong);
+  transform-origin: right;
+}
+
+.ab__lead {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(28px, 3.7cqi, 48px);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.ab__lead > span {
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.ab__pic {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 889;
+}
+
+.ab__pic > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 100%;
+  /* Dark only: a faint rim so the navy monitor and dark hair keep an edge on Onyx. Never a box. */
+  filter: var(--cutout-rim);
+}
+
+/* ---------- Below the floor ---------- */
+
+.ab__below {
+  display: grid;
+  grid-template-columns: minmax(0, 42%) minmax(0, 58%);
+  gap: clamp(40px, 5cqi, 56px);
+  align-items: start;
+  margin-top: clamp(32px, 5vh, 48px);
+}
+
+.ab__bio {
+  display: grid;
+  gap: 20px;
+}
+
+.ab__note {
+  margin: 0;
+  max-width: 100%;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* Personal story paragraphs */
+.ab__story {
+  margin: 0;
+  max-width: 100%;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.ab__note > strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ab__note > a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-fast) var(--ease-spring);
+}
+
+.ab__note > a:hover {
+  text-decoration-color: var(--ink);
+}
+
+.ab__caps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.ab__cap {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ab__cap-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ab__cap-i {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+/* Tool logos as white rounded-square tiles with authentic brand colors. */
+.ab__keys {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  align-items: center;
+}
+
+.ab__key {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 7px;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 1px rgba(0, 0, 0, 0.03);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  margin-left: -4px;
+}
+
+.ab__key:first-child {
+  margin-left: 0;
+}
+
+.ab__key:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.06);
+  z-index: 1;
+}
+
+.ab__key > img {
+  width: var(--icon-size, 20px);
+  height: var(--icon-size, 20px);
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+}
+
+/* Ensure white tile background in both light and dark modes */
+@media (prefers-color-scheme: dark) {
+  .ab__key {
+    background: #FFFFFF;
+    border-color: var(--line);
+  }
+}
+
+/* Tablet/mobile: allow wrapping if needed */
+@container (max-width: 760px) {
+  .ab__keys {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .ab__key {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Credentials ---------- */
+
+.ab__creds {
+  display: grid;
+  /* First 3 columns share space equally; 4th gets more room for the wider logo + text */
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr);
+  gap: 24px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+/* Each credential: horizontal flex item with icon/logo on left, text on right */
+.ab__cred {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  padding: 0;
+}
+
+/* Standard credential icon (cert, place, community) — compact 44×44 square */
+.ab__cred-mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 1px rgba(0, 0, 0, 0.03);
+}
+
+.ab__cred-mark > img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* WilbertBuildsAI brand logo — original transparent PNG with theme-aware switching */
+.ab__cred-logo {
+  display: block;
+  width: 160px;
+  flex: 0 0 160px;
+  /* Height is auto, determined by image aspect ratio */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+@media (min-width: 1024px) {
+  .ab__cred-logo {
+    width: 170px;
+    flex: 0 0 170px;
+  }
+}
+
+.ab__cred-logo > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* Logo PNG has transparent padding at top; shift artwork up to align
+     visual center with 44×44 icons in other columns */
+  margin-top: -36px;
+}
+
+/* Theme-aware logo switching handled by global .only-light / .only-dark rules */
+
+/* Brand column: logo is taller than standard 44×44 icons, so its visual center sits higher.
+   Align the text block to the logo's visual center by shifting it up slightly. */
+.ab__cred--brand .ab__cred-copy {
+  align-self: flex-start;
+  padding-top: 6px;
+}
+
+.ab__cred-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  text-align: left;
+  /* Keep title and subtitle on one line each */
+  white-space: nowrap;
+}
+
+.ab__cred-copy > b {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ab__cred-copy > small {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ab__cred-go {
+  display: none;
+}
+
+a.ab__cred:hover .ab__cred-go {
+  display: inline-block;
+  color: var(--ink);
+  transform: translate(2px, -2px);
+}
+
+a.ab__cred:focus-visible,
+.ab__note > a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Certifications CTA - spans full width */
+.ab__cert-cta {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Laptop: four columns become two when content area narrows ---------- */
+
+@container (max-width: 1000px) {
+  .ab__creds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .ab__cred-logo {
+    width: 150px;
+    flex: 0 0 150px;
+  }
+  /* Brand column: vertically center text beside logo, then shift up slightly */
+  .ab__cred--brand {
+    align-items: center;
+    margin-top: 15px;
+  }
+  .ab__cred--brand .ab__cred-copy {
+    align-self: center;
+    padding-top: 0;
+    margin-top: -24px;
+  }
+  /* Tara AI Community (3rd item): align with brand item in second row */
+  .ab__cred:nth-child(3) {
+    margin-top: 15px;
+  }
+}
+
+/* ---------- Narrow columns: the picture drops under the lead ---------- */
+
+@container (max-width: 760px) {
+  .ab__stage {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 24px;
+  }
+  .ab__lead {
+    max-width: 100%;
+    font-size: clamp(26px, 5cqi, 42px);
+  }
+  .ab__pic {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .ab__below {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ab__cap {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    gap: 10px 12px;
+    padding: 14px 0;
+  }
+  .ab__keys {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .ab__cap-i {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .ab__creds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .ab__cred-logo {
+    width: 140px;
+    flex: 0 0 140px;
+  }
+  .ab__cert-cta {
+    margin-top: 0;
+    padding-top: 12px;
+  }
+}
+
+@container (max-width: 480px) {
+  .ab__creds {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .ab__cred {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ab__cred-mark,
+  .ab__cred-logo {
+    flex: 0 0 auto;
+  }
+  .ab__cred-logo {
+    width: 100%;
+    max-width: 170px;
+  }
+  .ab__cred-copy {
+    width: 100%;
+    /* Allow text to wrap on mobile */
+    white-space: normal;
+  }
+}
+
+/* ---------- Scroll-in: the picture rises onto the floor, the floor draws out ---------- */
+
+@keyframes ab-rise {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+}
+
+@keyframes ab-floor {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ab__pic {
+      animation: ab-rise linear both;
+    }
+    /* Lands the moment the whole picture is on screen. */
+    .ab .ab__pic {
+      animation-timeline: view();
+      animation-range: entry 10% entry 100%;
+    }
+    .ab__stage::after {
+      animation: ab-floor linear both;
+    }
+    /* The floor is the stage's bottom edge: it can only be seen from contain 0%, so it draws after that. */
+    .ab .ab__stage::after {
+      animation-timeline: --ab-stage;
+      animation-range: contain 0% contain 35%;
+    }
+    .ab .ab__stage {
+      view-timeline-name: --ab-stage;
+    }
+    /* Parallax: the lead is the near layer and floats up over the picture, which stays planted on
+       its floor. Wide columns only: below 761px the picture sits under the lead with 24px between. */
+    .ab__lead {
+      animation: ab-lead-drift linear both;
+    }
+    .ab .ab__stage .ab__lead {
+      animation-timeline: --ab-stage;
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes ab-lead-drift {
+  from {
+    translate: 0 32px;
+  }
+  to {
+    translate: 0 -32px;
+  }
+}
+
+@container (max-width: 760px) {
+  .ab .ab__stage .ab__lead {
+    animation-name: none;
+  }
+}
+
+/* Certifications CTA */
+.ab__cert-cta {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.ab__cert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 400ms ease;
+}
+
+.ab__cert-btn:hover {
+  color: var(--ink);
+}
+
+.ab__cert-btn svg {
+  transition: transform 500ms var(--ease-spring);
+}
+
+.ab__cert-btn:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.ab__cert-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Certifications Modal ---------- */
+
+.ab__cert-modal {
+  border: none;
+  background: transparent;
+  max-width: 900px;
+  width: 90%;
+  margin: auto;
+}
+
+.ab__cert-modal::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.ab__cert-modal__panel {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+  container-type: inline-size;
+  max-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ab__cert-modal__grab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  cursor: grab;
+  z-index: 10;
+}
+
+.ab__cert-modal__grab:active {
+  cursor: grabbing;
+}
+
+.ab__cert-modal__grab > span {
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 4px auto 0;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.ab__cert-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ab__cert-modal__head-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ab__cert-modal__head > h3,
+.ab__cert-modal__head-content > h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ab__cert-modal__subtitle {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.ab__cert-modal__count {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ab__cert-modal__close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+}
+
+.ab__cert-modal__close:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+  background: var(--surface-3);
+}
+
+.ab__cert-modal__body {
+  padding: 24px;
+  max-height: calc(90dvh - 120px);
+  overflow: auto;
+  flex: 1;
+}
+
+.ab__cert-modal__intro {
+  margin: 0 0 24px;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.ab__cert-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Responsive grid: 3-col desktop, 2-col tablet, 1-col mobile */
+@container (max-width: 800px) {
+  .ab__cert-modal__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (max-width: 520px) {
+  .ab__cert-modal__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ab__cert-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.ab__cert-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.ab__cert-card__image {
+  aspect-ratio: 1.4;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.ab__cert-card__image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.ab__cert-card:hover .ab__cert-card__image > img {
+  transform: scale(1.03);
+}
+
+.ab__cert-card__info {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+}
+
+.ab__cert-card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.ab__cert-card__issuer {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.ab__cert-card__date {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ab__cert-card__verify {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.ab__cert-card__verify:hover {
+  color: var(--ink);
+  transform: translateX(2px);
+}
+
+.ab__cert-card__verify:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Certificate image button (opens lightbox) */
+.ab__cert-image-btn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.ab__cert-image-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* ---------- Certifications Lightbox ---------- */
+
+.ab__lightbox {
+  border: none;
+  background: transparent;
+  max-width: 95vw;
+  max-height: 95vh;
+  margin: auto;
+}
+
+.ab__lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.95);
+}
+
+.ab__lightbox-viewer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.ab__lightbox-viewer:active {
+  cursor: grabbing;
+}
+
+.ab__lightbox-img {
+  position: absolute;
+  max-width: none;
+  max-height: none;
+  image-rendering: crisp-edges;
+}
+
+.ab__lightbox-close {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+  z-index: 10;
+}
+
+.ab__lightbox-close:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+  background: var(--surface-3);
+}
+
+.ab__lightbox-controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+.ab__lightbox-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+}
+
+.ab__lightbox-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+  background: var(--surface-3);
+}
+
+.ab__lightbox-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ab__lightbox-counter {
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+
+.ab__lightbox-btn:focus-visible,
+.ab__lightbox-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reduced motion: simpler modal entrance */
+@media (prefers-reduced-motion: reduce) {
+  .ab__cert-modal {
+    animation: none;
+  }
+  .ab__lightbox {
+    animation: none;
+  }
+}
+
+/* Mobile lightbox adjustments */
+@media (max-width: 640px) {
+  .ab__lightbox-close {
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+  .ab__lightbox-controls {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    transform: none;
+    justify-content: space-between;
+    padding: 10px 16px;
+  }
+  .ab__lightbox-btn {
+    width: 36px;
+    height: 36px;
+  }
+}

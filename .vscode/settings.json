@@ -1,0 +1,14 @@
+{
+  "task.allowAutomaticTasks": "on",
+  "task.autoStart": {
+    "Portfolio Dev Server": "onFolderOpen"
+  },
+  "terminal.integrated.autoReplies": {
+    "Portfolio Dev Server": [
+      {
+        "text": "Do you want to allow this task to run automatically?",
+        "response": "Allow"
+      }
+    ]
+  }
+}

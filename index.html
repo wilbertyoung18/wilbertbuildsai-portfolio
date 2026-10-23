@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- data-static-meta: for crawlers that do not run JS. main.tsx removes them on boot so each route owns one title + description.
+         Keep this head in step with content/site.ts and the Home entry in src/app/routes.ts. -->
+    <title data-static-meta>Wilbert Young | AI Automation Specialist</title>
+    <meta data-static-meta name="description" content="Explore the portfolio of Wilbert Young, an AI Automation Specialist building AI agents, workflow automations, and practical solutions that help businesses work smarter." />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- The phone bar's mark is the mobile LCP; dark is the default theme, so its mark loads first. -->
+    <link rel="preload" href="/images/brand/mark-light-96.webp" as="image" fetchpriority="high" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <meta property="og:type" content="website" />
+    <!-- Link previews: absolute URLs on your domain. Re-render og-image.png with scripts/make-og-image.mjs. -->
+    <meta property="og:site_name" content="Wilbert Young - WilbertBuildsAI" />
+    <meta property="og:url" content="https://wilbertyoung.com/" />
+    <meta property="og:title" content="Wilbert Young | AI Automation Specialist" />
+    <meta property="og:description" content="Explore the portfolio of Wilbert Young, an AI Automation Specialist building AI agents, workflow automations, and practical solutions that help businesses work smarter." />
+    <meta property="og:image" content="https://wilbertyoung.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Wilbert Young, AI Automation Specialist" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://wilbertyoung.com/og-image.png" />
+
+    <!-- Dark by default; a saved light pick is applied before first paint, so it never flashes dark first.
+         Mirrors src/lib/theme.ts. The deploy CSP allows this script by hash: after any edit run npm run csp:check. -->
+    <script>
+      try {
+        if (localStorage.getItem('pv2-theme') === 'light') {
+          document.documentElement.dataset.theme = 'light'
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#F0F8FF')
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
