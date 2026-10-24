@@ -3,6 +3,37 @@
  * (5 parts) beside the form panel (7 parts); one column under 820px of container.
  */
 
+/* Contact header illustration: person working on laptop in dark AI workspace */
+.ct-illustration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(200px, 35vw, 320px);
+  height: auto;
+  max-height: 60vh;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  opacity: 0.85;
+  mix-blend-mode: luminosity;
+  pointer-events: none;
+}
+.ct-illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.pg-head {
+  position: relative;
+  padding-right: clamp(220px, 38vw, 360px);
+}
+.pg-head > .ct-illustration {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .ct-sheet {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
@@ -328,5 +359,17 @@
   }
   .ct-row2 {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .pg-head {
+    padding-right: 0;
+  }
+  .pg-head > .ct-illustration {
+    position: static;
+    width: 100%;
+    max-width: 320px;
+    margin: 16px auto 0;
+    opacity: 0.7;
+    mix-blend-mode: normal;
+    border-radius: var(--radius-lg);
   }
 }

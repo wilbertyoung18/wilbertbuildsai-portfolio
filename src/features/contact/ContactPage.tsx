@@ -12,6 +12,14 @@ import './contact.css'
 
 const pad2 = (n: number) => String(n).padStart(2, '0')
 
+/** Illustration for the contact page. */
+const contactIllustration = {
+  src: '/images/contact/illustration.svg',
+  alt: 'Person working on a laptop in a dark, AI-inspired workspace',
+  width: 400,
+  height: 400,
+}
+
 /** The answers plate beside the form. Nested = inside a Home section, so every heading steps down one level. */
 function ContactSheet({ nested }: { nested: boolean }) {
   const H = nested ? 'h3' : 'h2'
@@ -64,7 +72,11 @@ export function ContactPage({ page }: { page: PageRoute }) {
     <div className="pg ct">
       <PageMeta page={page} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: contactJsonLd({ path: page.path, title: page.title, description: page.description, faq: allFaqs }) }} />
-      <PageHeader eyebrow={c.eyebrow} titleThin={c.titleThin} titleBold={c.titleBold} lede={c.lede} />
+      <PageHeader eyebrow={c.eyebrow} titleThin={c.titleThin} titleBold={c.titleBold} lede={c.lede}>
+        <figure className="ct-illustration" aria-hidden>
+          <img src={contactIllustration.src} alt={contactIllustration.alt} width={contactIllustration.width} height={contactIllustration.height} loading="lazy" decoding="async" />
+        </figure>
+      </PageHeader>
       <ContactSheet nested={false} />
     </div>
   )

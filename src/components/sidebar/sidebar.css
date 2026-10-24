@@ -104,6 +104,52 @@
   height: auto;
   object-fit: contain;
 }
+
+/* Collapsed rail wordmark: hidden by default, shown only when collapsed.
+   In collapsed state: 48px wide, centered at top of rail, preserves aspect ratio. */
+.sb-logo__wordmark {
+  display: none;
+  flex: none;
+  width: 48px;
+  height: auto;
+}
+.sb-logo__wordmark > span {
+  display: none;
+  width: 100%;
+  height: auto;
+}
+.sb-logo__wordmark > span > img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* On the rail: hide the expanded logo mark, show the wordmark */
+.sb-panel[data-collapsed='true'] .sb-logo__mark {
+  display: none;
+}
+.sb-panel[data-collapsed='true'] .sb-logo__wordmark {
+  display: block;
+}
+.sb-panel[data-collapsed='true'] .sb-logo__wordmark--light,
+.sb-panel[data-collapsed='true'] .sb-logo__wordmark--dark {
+  display: block;
+}
+
+/* Theme-aware: hide the wrong theme's wrapper span entirely (higher specificity than > span rule) */
+:root:not([data-theme='dark']) .sb-panel[data-collapsed='true'] .sb-logo__wordmark--dark,
+:root[data-theme='dark'] .sb-panel[data-collapsed='true'] .sb-logo__wordmark--light {
+  display: none;
+}
+
+/* Theme-aware wordmark images: global theme rules in index.css hide .only-light/.only-dark.
+   Unique wrapper classes (.sb-logo__wordmark--light / --dark) prevent minifier merge. */
+.sb-panel[data-collapsed='true'] .sb-logo__wordmark--light .only-light {
+  display: inline;
+}
+.sb-panel[data-collapsed='true'] .sb-logo__wordmark--dark .only-dark {
+  display: inline-block;
+}
 /* The second half of the brand name takes the accent in both themes (a logotype, aria-hidden: the link carries the name). */
 .sb-logo__accent {
   color: var(--accent);
@@ -222,6 +268,9 @@
 }
 .sb-panel[data-collapsed='true'] .sb-logo__mark {
   transform: translateX(var(--mark-x, 0px));
+}
+.sb-panel[data-collapsed='true'] .sb-logo__wordmark {
+  transform: translateX(var(--wordmark-x, 0px));
 }
 .sb-panel[data-collapsed='true'] .sb-pic {
   transform: translateX(var(--pic-x, 0px)) scale(var(--pic-scale, 1));

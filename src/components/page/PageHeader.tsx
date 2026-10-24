@@ -23,7 +23,8 @@ export function PageHeader({ eyebrow, titleThin, titleBold, lede, level = 1, id,
         <i aria-hidden />
       </p>
       <Title id={id} className="pg-title">
-        <span>{titleThin}</span> <b>{titleBold}</b>
+        <div className="pg-title__thin">{titleThin}</div>
+        <div className="pg-title__bold">{titleBold}</div>
       </Title>
       <p className="pg-lede">{lede}</p>
       {children}

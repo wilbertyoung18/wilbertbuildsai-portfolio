@@ -67,6 +67,9 @@
   aspect-ratio: 16 / 9;
   background: var(--paper-2);
 }
+
+/* Base image rule: fill the viewport, anchor to top by default.
+   Per-image classes below override object-position to frame meaningful content. */
 .kt-screen > img,
 .kt-screen > video {
   position: absolute;
@@ -75,6 +78,105 @@
   height: 100%;
   object-fit: cover;
   object-position: top center;
+}
+
+/* Main preview image (overview): focus on upper portion where Zapier workflows are visible. */
+.kt-screen > img.kt-preview-image {
+  object-fit: cover;
+  object-position: left top;
+  transform: scale(1.15) translateY(-65px);
+  transform-origin: left top;
+}
+
+/* On narrower screens, reduce zoom to avoid clipping workflow names. */
+@container (max-width: 1024px) {
+  .kt-screen > img.kt-preview-image {
+    transform: scale(1.1) translateY(-55px);
+    transform-origin: left top;
+  }
+}
+@container (max-width: 640px) {
+  .kt-screen > img.kt-preview-image {
+    transform: scale(1.05) translateY(-45px);
+    transform-origin: left top;
+  }
+}
+
+/* ---------- Room screenshots: individual framing via object-position ---------- */
+
+/* Base class: no transform. Framing controlled by object-position. */
+.kt-room-image {
+  object-fit: cover;
+  transition: object-position var(--dur-base) var(--ease-out);
+}
+
+/* Room 01 — Capture the Lead: transparent screen bg so pale-yellow Youform image fills edge-to-edge */
+.kt-room[data-kt-pane="0"] .kt-screen {
+  background: transparent;
+}
+
+/* Per-image rules: higher specificity (.kt-screen > img.*) to override base .kt-screen > img rule */
+.kt-screen > img.kt-room-1-main {
+  /* Youform Lead Form: move UP ~50px (15.5% → 10%), keep horizontal at 52%, keep scale 0.98 */
+  object-position: 52% 10%;
+  transform: scale(0.98);
+  transform-origin: center;
+}
+.kt-screen > img.kt-room-1-supporting {
+  /* HubSpot Contacts: reveal left nav + top header, show contact table */
+  object-position: 35% 15%;
+}
+
+.kt-screen > img.kt-room-2-main {
+  /* Slack Subscription Alert: center the notification card */
+  object-position: center 30%;
+}
+.kt-screen > img.kt-room-2-supporting {
+  /* HubSpot Customer Record: reveal left sidebar + top nav */
+  object-position: 35% 12%;
+}
+
+.kt-screen > img.kt-room-3-main {
+  /* Trello Workspace: fit the board columns, slight zoom out */
+  object-position: center 35%;
+  transform: scale(1.05);
+}
+.kt-screen > img.kt-room-3-supporting {
+  /* Client Onboarding Form: show centered heading + turquoise Continue button without clipping */
+  object-fit: contain;
+  object-position: center center;
+}
+
+.kt-screen > img.kt-room-4-main {
+  /* Asana Tasks: left-aligned to show navigation, task names, section labels from actual left edge */
+  object-position: left top;
+}
+.kt-screen > img.kt-room-4-supporting {
+  /* Slack Onboarding Update: align channel sidebar + notification */
+  object-position: center 32%;
+}
+
+.kt-room[data-kt-pane="4"] .kt-screen > img.kt-room-image {
+  /* Full workflow diagrams: contain to show entire diagram, centered */
+  object-fit: contain;
+  object-position: center center;
+  transform: none;
+}
+
+/* Lead Capture (workflow 0): full diagram visible, no zoom */
+.kt-room[data-kt-pane="4"] .kt-screen > img.kt-room-5-workflow-0 {
+  object-fit: contain;
+  object-position: center center;
+  transform: none;
+}
+
+/* Responsive: reduce zoom slightly */
+@container (max-width: 1024px) {
+  .kt-screen > img.kt-room-3-main { transform: scale(1.03); }
+}
+
+@container (max-width: 640px) {
+  .kt-screen > img.kt-room-3-main { transform: scale(1.02); }
 }
 
 /* The film's pause / play: a 14px glyph in a 44px-wide hit area, the bar's full height. */
@@ -201,6 +303,19 @@
   }
   .kt-rooms__nav {
     position: relative;
+    /* Offset from grid-center to align with upper-middle of browser mockup.
+       Calculated: mockup top ≈ 75px from viewport top; mockup height = 100svh - 300px;
+       target = mockup_top + mockup_height/3 ≈ 75px + (100svh-300px)/3.
+       Current centered nav top = 50svh - nav_height/2 ≈ 50svh - 133px.
+       For 1080p: target ≈ 335px, current ≈ 407px → offset ≈ -72px. */
+    margin-top: -72px;
+  }
+  .kt-rooms__nav > h2 {
+    /* Fit longer heading within original nav column width (max 250px) by tightening typography */
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    line-height: 1.2;
+    margin-bottom: 14px;
   }
   .kt-rooms__list {
     display: grid;
@@ -334,5 +449,137 @@
   }
   .kt-stats > div:nth-child(n + 3) {
     border-top: 1px solid var(--line);
+  }
+}
+
+/* ---------- Screenshot controls ---------- */
+
+.kt-screen {
+  position: relative;
+}
+
+.kt-screen__controls {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--surface-rgb), 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  z-index: 10;
+}
+
+.kt-screen__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
+}
+
+.kt-screen__nav-btn:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.kt-screen__nav-btn.active {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.kt-screen__nav-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.kt-screen__workflow-selector {
+  display: flex;
+  gap: 6px;
+}
+
+.kt-screen__workflow-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
+  white-space: nowrap;
+}
+
+.kt-screen__workflow-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: var(--surface-2);
+}
+
+.kt-screen__workflow-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.kt-screen__workflow-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Room caption additions ---------- */
+
+.kt-room__benefit {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.kt-room__workflow {
+  margin: 8px 0 0;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+
+.kt-room__workflow-desc {
+  margin: 8px 0 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ---------- Responsive adjustments for controls ---------- */
+
+@container (max-width: 640px) {
+  .kt-screen__controls {
+    bottom: 8px;
+    padding: 4px 8px;
+  }
+  .kt-screen__nav-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  .kt-screen__workflow-btn {
+    padding: 3px 8px;
+    font-size: 10px;
   }
 }

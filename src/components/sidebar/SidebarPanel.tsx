@@ -42,6 +42,15 @@ export function SidebarPanel({ variant, collapsed = false, onNavigate, onHoverCh
         </p>
         <Link to="/" className="sb-logo" onClick={onNavigate} aria-label={`${site.brand} home`}>
           <BrandMark className="sb-logo__mark" />
+          {/* Collapsed rail wordmark: theme-aware, only visible when collapsed */}
+          <span className="sb-logo__wordmark" aria-hidden>
+            <span className="sb-logo__wordmark--light">
+              <img className="only-light" src="/images/profile/Wordmark Logo dark.png" alt="" width={137} height={40} />
+            </span>
+            <span className="sb-logo__wordmark--dark">
+              <img className="only-dark" src="/images/profile/Wordmark logo light.png" alt="" width={137} height={40} />
+            </span>
+          </span>
         </Link>
 
         <Link

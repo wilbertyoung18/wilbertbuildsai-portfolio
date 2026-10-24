@@ -1,7 +1,7 @@
 import type { FocusEvent, MouseEvent, PointerEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
 import { ArrowUpRight, Moon } from '@phosphor-icons/react'
-import { NAV_GROUPS, navEntries, navTarget, pages, type NavEntry, showDiscoverSection } from '@/app/routes'
+import { NAV_GROUPS, navEntries, navTarget, pages, type NavEntry, showDiscoverSection, showProofInDiscover, showResourcesInDiscover } from '@/app/routes'
 import { useSectionInView } from '@/hooks/use-section-in-view'
 import { useTheme } from '@/hooks/use-theme'
 import { scrollToSection } from '@/lib/motion/smooth-scroll'
@@ -166,7 +166,15 @@ export function SidebarNav({ collapsed, onNavigate, onHoverChange }: Props) {
               </span>
             </div>
 
-            {navEntries(group.id).map(renderEntry)}
+            {navEntries(group.id)
+              .filter((entry) => {
+                if (group.id === 'discover') {
+                  if (entry.id === 'proof') return showProofInDiscover
+                  if (entry.id === 'resource') return showResourcesInDiscover
+                }
+                return true
+              })
+              .map(renderEntry)}
 
             {group.id === 'general' ? (
               <button

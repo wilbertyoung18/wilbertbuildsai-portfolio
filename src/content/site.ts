@@ -6,9 +6,9 @@ import type { Credential, SocialLink } from './schema'
  */
 export const site = {
   name: 'Wilbert Young',
-  brand: 'Wilbert Young',
+  brand: 'WilbertBuildsAI',
   /** The brand name as the sidebar logo shows it: the second part takes the accent color. */
-  brandParts: ['Wilbert', 'Young'],
+  brandParts: ['Wilbert', 'BuildsAI'],
   /** Your logo mark, one file per theme (`light` = for light backgrounds). The 96px copies are the
    *  sidebar header (shown at 32-36px); the full ones are the Work logo faces. */
   logo: {
@@ -22,7 +22,7 @@ export const site = {
   role: 'AI Automation Specialist',
   email: 'wilbertyoung18@gmail.com',
   emailSubject: 'Project inquiry',
-  replyPromise: 'Reply within one business day.',
+  replyPromise: 'I\'ll get back to you within 24–48 hours.',
   location: 'Manila, Philippines',
   /** Two-letter country code (ISO 3166) for the Person JSON-LD address. */
   countryCode: 'PH',

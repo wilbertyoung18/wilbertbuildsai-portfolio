@@ -11,8 +11,13 @@ import { externalLinks, site } from '@/content/site'
 export type NavGroupId = 'menu' | 'discover' | 'general'
 
 // Toggle to temporarily hide the DISCOVER section from the sidebar.
-// Set to true when Proof, Showcase, and Resources content is ready for public display.
-export const showDiscoverSection = false
+// Set to true when Showcase content is ready for public display.
+export const showDiscoverSection = true
+
+// Individual visibility toggles for Discover group entries.
+// Proof and Resources remain hidden; Showcase is visible.
+export const showProofInDiscover = false
+export const showResourcesInDiscover = false
 
 // Toggle to temporarily hide the Proof section from the Home page flow and /proof route.
 // Set to true when client testimonials and proof content is ready for public display.

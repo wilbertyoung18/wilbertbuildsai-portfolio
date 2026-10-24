@@ -183,11 +183,26 @@ export type Quote = {
   text: string
 }
 
+export type WorkflowDiagram = {
+  id: string
+  label: string
+  image: Image
+  description: string
+}
+
 export type ProductTab = {
   id: string
   label: string
   body: string
   image: Image
+  /** Optional second screenshot for rooms 1-4. */
+  supportingImage?: Image
+  /** Business benefit line shown under the description. */
+  businessBenefit?: string
+  /** Workflow summary (e.g., "Youform → HubSpot"). */
+  workflow?: string
+  /** For room 5: array of workflow diagrams to switch between. */
+  workflowDiagrams?: WorkflowDiagram[]
 }
 
 /** A muted product film: plays on screen, poster first. */

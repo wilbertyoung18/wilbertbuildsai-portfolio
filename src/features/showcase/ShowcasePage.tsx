@@ -1,4 +1,4 @@
-import { useRef, type CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 import { ArrowUpRight } from '@phosphor-icons/react'
 import { PageMeta } from '@/app/PageMeta'
 import type { PageRoute } from '@/app/routes'
@@ -7,7 +7,6 @@ import { showcaseFaq, showcaseFilm, showcaseHost, showcasePage, showcaseStats, p
 import { useScrollScene } from '@/hooks/use-scroll-scene'
 import { showcaseJsonLd } from '@/lib/seo'
 import { BrowserWindow } from './BrowserWindow'
-import { FilmWindow } from './FilmWindow'
 import { roomsScene } from './rooms-scene'
 import './showcase.css'
 
@@ -37,10 +36,133 @@ function ShowcaseBody({ nested }: { nested: boolean }) {
   const H2 = nested ? 'h3' : 'h2'
   const H3 = nested ? 'h4' : 'h3'
 
+  // Track which screenshot is active for each room (0 = main, 1 = supporting)
+  const [activeScreenshot, setActiveScreenshot] = useState<Record<number, number>>({})
+  // Track which workflow diagram is active for room 5
+  const [activeWorkflow, setActiveWorkflow] = useState(0)
+
+  const handleScreenshotSwitch = (roomIndex: number, screenshotIndex: number) => {
+    setActiveScreenshot((prev: Record<number, number>) => ({ ...prev, [roomIndex]: screenshotIndex }))
+  }
+
+  const handleWorkflowSwitch = (index: number) => {
+    setActiveWorkflow(index)
+  }
+
+  const getRoomImage = (room: typeof productTabs[0], index: number) => {
+    // Room 5 (index 4) has workflow diagrams
+    if (index === 4 && room.workflowDiagrams && room.workflowDiagrams.length > 0 && room.workflowDiagrams[activeWorkflow]) {
+      return room.workflowDiagrams[activeWorkflow].image
+    }
+    // Rooms 1-4: check for supporting image
+    const screenshotIndex = activeScreenshot[index] ?? 0
+    if (screenshotIndex === 1 && room.supportingImage) {
+      return room.supportingImage
+    }
+    return room.image
+  }
+
+  const getRoomImageAlt = (room: typeof productTabs[0], index: number) => {
+    if (index === 4 && room.workflowDiagrams && room.workflowDiagrams.length > 0 && room.workflowDiagrams[activeWorkflow]) {
+      return room.workflowDiagrams[activeWorkflow].image.alt
+    }
+    const screenshotIndex = activeScreenshot[index] ?? 0
+    if (screenshotIndex === 1 && room.supportingImage) {
+      return room.supportingImage.alt
+    }
+    return room.image.alt
+  }
+
+  const getRoomImageClass = (room: typeof productTabs[0], index: number) => {
+    // Room 5 (index 4) has workflow diagrams - add workflow-specific class
+    if (index === 4) {
+      const workflowIndex = activeWorkflow
+      return `kt-room-image kt-room-5-workflow-${workflowIndex}`
+    }
+    // Rooms 1-4: different class for main vs supporting
+    const screenshotIndex = activeScreenshot[index] ?? 0
+    if (screenshotIndex === 1 && room.supportingImage) {
+      return `kt-room-image kt-room-${index + 1}-supporting`
+    }
+    return `kt-room-image kt-room-${index + 1}-main`
+  }
+
+  const hasSupportingImage = (room: typeof productTabs[0], index: number) => {
+    if (index === 4) return room.workflowDiagrams && room.workflowDiagrams.length > 1
+    return !!room.supportingImage
+  }
+
+  const renderScreenshotControls = (room: typeof productTabs[0], index: number) => {
+    if (index === 4 && room.workflowDiagrams && room.workflowDiagrams.length > 1) {
+      // Room 5: workflow diagram selector
+      return (
+        <div className="kt-screen__controls" aria-label="Select workflow diagram">
+          <div className="kt-screen__workflow-selector">
+            {room.workflowDiagrams.map((wf, i) => (
+              <button
+                key={wf.id}
+                type="button"
+                className={`kt-screen__workflow-btn ${i === activeWorkflow ? 'active' : ''}`}
+                onClick={() => handleWorkflowSwitch(i)}
+                aria-current={i === activeWorkflow ? 'true' : 'false'}
+                aria-label={`View ${wf.label} workflow`}
+              >
+                {wf.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    if (hasSupportingImage(room, index)) {
+      // Rooms 1-4: toggle between main and supporting
+      const current = activeScreenshot[index] ?? 0
+      return (
+        <div className="kt-screen__controls" aria-label="Switch screenshot">
+          <button
+            type="button"
+            className={`kt-screen__nav-btn ${current === 0 ? 'active' : ''}`}
+            onClick={() => handleScreenshotSwitch(index, 0)}
+            aria-current={current === 0 ? 'true' : 'false'}
+            aria-label="View main screenshot"
+            title="Main screenshot"
+          >
+            <span className="pg-mono">01</span>
+          </button>
+          <button
+            type="button"
+            className={`kt-screen__nav-btn ${current === 1 ? 'active' : ''}`}
+            onClick={() => handleScreenshotSwitch(index, 1)}
+            aria-current={current === 1 ? 'true' : 'false'}
+            aria-label="View supporting screenshot"
+            title="Supporting screenshot"
+          >
+            <span className="pg-mono">02</span>
+          </button>
+        </div>
+      )
+    }
+
+    return null
+  }
+
   return (
     <>
       <div className="kt-film">
-        <FilmWindow film={showcaseFilm} />
+        <BrowserWindow url={`${showcaseHost} / client-onboarding`}>
+          <div className="kt-screen">
+            <img
+              src={showcasePage.previewImage.src}
+              alt={showcasePage.previewImage.alt}
+              width={showcasePage.previewImage.width}
+              height={showcasePage.previewImage.height}
+              loading="eager"
+              decoding="async"
+              className="kt-preview-image"
+            />
+          </div>
+        </BrowserWindow>
       </div>
 
       <dl className="kt-stats">
@@ -74,31 +196,57 @@ function ShowcaseBody({ nested }: { nested: boolean }) {
           </div>
 
           <div className="kt-rooms__panes">
-            {productTabs.map((room, i) => (
-              <figure key={room.id} id={`kt-room-${room.id}`} className="kt-room" data-kt-pane={i} data-on={i === 0 ? '' : undefined}>
-                <BrowserWindow url={`${showcaseHost} / ${room.label.toLowerCase()}`}>
-                  <div className="kt-screen">
-                    <img
-                      src={room.image.src}
-                      srcSet={room.image.srcSet}
-                      sizes="auto, (min-width: 1024px) 52vw, 92vw"
-                      alt={room.image.alt}
-                      width={room.image.width}
-                      height={room.image.height}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                </BrowserWindow>
-                <figcaption>
-                  <span className="pg-mono">
-                    {pad2(i + 1)} / {pad2(productTabs.length)}
-                  </span>
-                  <H3>{room.label}</H3>
-                  <p>{room.body}</p>
-                </figcaption>
-              </figure>
-            ))}
+            {productTabs.map((room, i) => {
+              const currentImage = getRoomImage(room, i)
+              const currentAlt = getRoomImageAlt(room, i)
+              const showControls = hasSupportingImage(room, i)
+
+              return (
+                <figure key={room.id} id={`kt-room-${room.id}`} className="kt-room" data-kt-pane={i} data-on={i === 0 ? '' : undefined}>
+                  <BrowserWindow
+                    url={`${showcaseHost} / ${room.label.toLowerCase()}`}
+                    action={showControls && renderScreenshotControls(room, i)}
+                  >
+                    <div className="kt-screen">
+                      <img
+                        src={currentImage.src}
+                        srcSet={currentImage.srcSet}
+                        sizes="auto, (min-width: 1024px) 52vw, 92vw"
+                        alt={currentAlt}
+                        width={currentImage.width}
+                        height={currentImage.height}
+                        loading="lazy"
+                        decoding="async"
+                        className={getRoomImageClass(room, i)}
+                      />
+                    </div>
+                  </BrowserWindow>
+                  <figcaption>
+                    <span className="pg-mono">
+                      {pad2(i + 1)} / {pad2(productTabs.length)}
+                    </span>
+                    <H3>{room.label}</H3>
+                    <p>{room.body}</p>
+                    {room.businessBenefit && (
+                      <p className="kt-room__benefit">
+                        <strong>{room.businessBenefit}</strong>
+                      </p>
+                    )}
+                    {room.workflow && (
+                      <p className="kt-room__workflow">
+                        <span className="pg-mono">Workflow: </span>
+                        {room.workflow}
+                      </p>
+                    )}
+                    {i === 4 && room.workflowDiagrams && room.workflowDiagrams[activeWorkflow] && (
+                      <p className="kt-room__workflow-desc">
+                        {room.workflowDiagrams[activeWorkflow].description}
+                      </p>
+                    )}
+                  </figcaption>
+                </figure>
+              )
+            })}
           </div>
         </div>
       </section>

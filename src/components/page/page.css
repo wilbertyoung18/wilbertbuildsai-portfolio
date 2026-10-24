@@ -62,7 +62,10 @@
   text-transform: uppercase;
   text-wrap: balance;
 }
-.pg-title > b {
+.pg-title__thin {
+  font-weight: 100;
+}
+.pg-title__bold {
   font-weight: 700;
 }
 
