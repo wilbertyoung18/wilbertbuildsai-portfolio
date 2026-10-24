@@ -20,9 +20,8 @@ export function contactText(m: ContactMessage): string {
 }
 
 /**
- * The mail-app hand-off: a mailto: to site.email with the standard subject and the message laid out, so
- * the visitor only presses send. The message is capped at 1500 characters in the form, which keeps the
- * encoded URL inside what desktop mail clients accept. Swapped for a POST once the form gets a backend.
+ * Builds a mailto: link for direct email fallback. The form itself submits via Formspree.
+ * Kept for potential future use or direct email links elsewhere on the site.
  */
 export function contactMailto(m: ContactMessage): string {
   return `mailto:${site.email}?subject=${encodeURIComponent(site.emailSubject)}&body=${encodeURIComponent(contactText(m))}`

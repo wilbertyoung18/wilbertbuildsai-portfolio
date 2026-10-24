@@ -18,7 +18,7 @@ export const site = {
     headerDark: '/images/brand/mark-light-96.webp',
   },
   /** The live address, no trailing slash. Canonical URLs, the sitemap and the JSON-LD use it. */
-  url: 'https://example.com',
+  url: 'https://wilbertbuildsai.vercel.app',
   role: 'AI Automation Specialist',
   email: 'wilbertyoung18@gmail.com',
   emailSubject: 'Project inquiry',

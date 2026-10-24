@@ -24,6 +24,7 @@ function isCompleteMessage(m: { firstName: string; lastName: string; email: stri
  * - Client-side validation for required fields and email format.
  * - Submits via Formspree (POST to https://formspree.io/f/xoeeqevo).
  * - Shows loading, success, and error states.
+ * - Privacy: Formspree receives the submitted data (name, email, message) and forwards it to the site owner's email.
  */
 export function ContactForm({ nested = false }: { nested?: boolean }) {
   const Done = nested ? 'h4' : 'h3'

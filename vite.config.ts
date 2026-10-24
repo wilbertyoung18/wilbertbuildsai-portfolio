@@ -72,6 +72,6 @@ export default defineConfig({
   resolve: {
     alias: { '@': src },
   },
-  // Public maps: Lighthouse flags large first-party JS without them, and DevTools traces read as source.
-  build: { sourcemap: true },
+  // Disable source maps in production to avoid exposing source code.
+  build: { sourcemap: false },
 })
