@@ -1,5 +1,5 @@
 import type { Icon } from '@phosphor-icons/react'
-import { Briefcase, Compass, Cube, CubeFocus, Envelope, FileText, House, SealCheck, ShieldCheck, Stack, User } from '@phosphor-icons/react'
+import { Briefcase, Compass, Cube, CubeFocus, Envelope, FileText, House, Robot, SealCheck, ShieldCheck, Stack, User } from '@phosphor-icons/react'
 import { workCount } from '@/content/work'
 import { externalLinks, site } from '@/content/site'
 
@@ -182,9 +182,18 @@ export const externals: ExternalRoute[] = [
     id: 'site-3d',
     href: '/3d/',
     sameTab: true,
-    label: '3D Site',
+    label: '3D Experience',
     description: 'An interactive 3D version of this portfolio.',
     icon: CubeFocus,
+    group: 'discover',
+  },
+  {
+    kind: 'external',
+    id: 'wilbert-ai',
+    href: 'https://wilbert-ai-studio.vercel.app/',
+    label: 'Wilbert AI',
+    description: 'A custom-built AI automation assistant for n8n, Vapi, webhooks and data workflows. Try the live demo.',
+    icon: Robot,
     group: 'discover',
   },
 ]
