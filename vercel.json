@@ -1,11 +1,47 @@
 {
+  "redirects": [
+    {
+      "source": "/3d",
+      "destination": "/3d/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/((?!3d(?:/|$)).*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'none'; script-src 'self' 'sha256-qYK06u5xEhuOqXk6my6gUqK8lbr6Z/fJ9Qxq5HoGtio='; style-src 'self' 'unsafe-inline'; img-src 'self'; media-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action https://formspree.io; frame-ancestors 'none'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    },
+    {
+      "source": "/3d(/.*)?",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'none'; script-src 'self' 'unsafe-hashes' 'sha256-v/lwp8Lg5NNG7YVCOI1TG94foaOnjlF2cHAsdsQ80g0=' 'sha256-ubcWAwNhdVeBfiRtLCSZVQ4g28MLL98xiQn5MsM8j8w=' 'sha256-y+xFwMi4uND1aEnqwgpqljFFi8aT4YmWi5lvr6dB+lU=' 'sha256-yYU4QOmk87C8fkafMGGICuiQHynDTP2JctH7fPMNRx4=' 'sha256-BTmOpNw+pu70/AXI10NLckH/RFMIbbP5RULJ5HXMIug=' 'sha256-kNC0F6WABFxq2i0K+QVUYTsFiCf09iTti6OVgD+8O+o=' 'sha256-WGQLTtugNxuU2jkDJJ4C76LTNP7b3q4y23IEKVwa1yA=' 'sha256-ZzXKZvaR0swUQi+HcQYhgXXBZ8z0PwAlCsqAYCO22Yw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self'; media-src 'self'; font-src https://fonts.gstatic.com; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
         },
         {
           "key": "Strict-Transport-Security",

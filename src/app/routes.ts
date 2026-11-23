@@ -1,5 +1,5 @@
 import type { Icon } from '@phosphor-icons/react'
-import { Briefcase, Compass, Cube, Envelope, FileText, House, SealCheck, ShieldCheck, Stack, User } from '@phosphor-icons/react'
+import { Briefcase, Compass, Cube, CubeFocus, Envelope, FileText, House, SealCheck, ShieldCheck, Stack, User } from '@phosphor-icons/react'
 import { workCount } from '@/content/work'
 import { externalLinks, site } from '@/content/site'
 
@@ -53,6 +53,8 @@ export type ExternalRoute = {
   kind: 'external'
   id: string
   href: string
+  /** Opens in this tab with a full page load (a static page on this domain, outside the router). */
+  sameTab?: true
   label: string
   description: string
   icon: Icon
@@ -173,6 +175,16 @@ export const externals: ExternalRoute[] = [
     label: 'Resources',
     description: 'PLACEHOLDER - tell me what to put here: one line on the off-site link (a blog, a guide, a store), or delete this entry.',
     icon: Compass,
+    group: 'discover',
+  },
+  {
+    kind: 'external',
+    id: 'site-3d',
+    href: '/3d/',
+    sameTab: true,
+    label: '3D Site',
+    description: 'An interactive 3D version of this portfolio.',
+    icon: CubeFocus,
     group: 'discover',
   },
 ]

@@ -91,6 +91,14 @@ export function SidebarNav({ collapsed, onNavigate, onHoverChange }: Props) {
     )
 
     if (entry.kind === 'external') {
+      if (entry.sameTab) {
+        return (
+          <a key={entry.id} href={entry.href} className="sb-item" {...itemState(entry.id)} {...handlers}>
+            {icon}
+            <span className="sb-item__label sb-fade">{entry.label}</span>
+          </a>
+        )
+      }
       return (
         <a key={entry.id} href={entry.href} target="_blank" rel="noreferrer" className="sb-item" {...itemState(entry.id)} {...handlers}>
           {icon}
