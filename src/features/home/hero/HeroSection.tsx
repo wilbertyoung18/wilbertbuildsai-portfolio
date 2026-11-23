@@ -49,7 +49,7 @@ export function HeroSection() {
 
         {/* A plain anchor: /3d/ is a static page outside the router. */}
         <a href="/3d/" className="hero__alt">
-          View 3D site
+          Explore in 3D
           <ArrowRight size={14} weight="bold" aria-hidden />
         </a>
       </div>
