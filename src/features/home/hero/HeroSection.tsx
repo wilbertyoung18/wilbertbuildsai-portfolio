@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { Link } from 'react-router'
-import { ArrowUpRight } from '@phosphor-icons/react'
+import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react'
 import { homeHero } from '@/content/home'
 import { useScrollScene } from '@/hooks/use-scroll-scene'
 import { scrollToSection } from '@/lib/motion/smooth-scroll'
@@ -46,6 +46,12 @@ export function HeroSection() {
           {homeHero.cta.label}
           <ArrowUpRight size={16} weight="bold" aria-hidden />
         </Link>
+
+        {/* A plain anchor: /3d/ is a static page outside the router. */}
+        <a href="/3d/" className="hero__alt">
+          View 3D site
+          <ArrowRight size={14} weight="bold" aria-hidden />
+        </a>
       </div>
     </section>
   )
