@@ -401,43 +401,6 @@
   }
 }
 
-/* ---------- Questions ---------- */
-
-.kt-faq {
-  display: grid;
-  gap: 0 clamp(28px, 4cqi, 56px);
-  margin-top: clamp(64px, 10vh, 112px);
-  padding-top: clamp(32px, 5vh, 48px);
-  border-top: 1px solid var(--line);
-}
-.kt-faq dl {
-  margin: 0;
-}
-.kt-faq dl > div {
-  padding: 0 0 26px;
-}
-.kt-faq dl > div + div {
-  padding-top: 26px;
-  border-top: 1px solid var(--line);
-}
-.kt-faq dt {
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-}
-.kt-faq dd {
-  margin: 8px 0 0;
-  max-width: 64ch;
-  color: var(--ink-2);
-  font-size: 15px;
-  line-height: 1.6;
-}
-@media (min-width: 1024px) {
-  .kt-faq {
-    grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
-  }
-}
-
 /* ---------- Phones ---------- */
 
 @container (max-width: 640px) {

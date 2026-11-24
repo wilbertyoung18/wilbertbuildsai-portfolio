@@ -126,10 +126,10 @@ export function personJsonLd({ description, skills, credential, sameAs, companyU
 
 const serialize = (graph: object[]) => JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')
 
-type ShowcaseLd = { path: string; name: string; description: string; url: string; rooms: ProductTab[]; film: ProductFilm; faq: Faq[] }
+type ShowcaseLd = { path: string; name: string; description: string; url: string; rooms: ProductTab[]; film: ProductFilm }
 
 /** Showcase page: the product as a SoftwareApplication, its film, the visible FAQ and the breadcrumb. */
-export function showcaseJsonLd({ path, name, description, url, rooms, film, faq }: ShowcaseLd): string {
+export function showcaseJsonLd({ path, name, description, url, rooms, film }: ShowcaseLd): string {
   return serialize([
     {
       '@type': 'SoftwareApplication',
@@ -144,10 +144,6 @@ export function showcaseJsonLd({ path, name, description, url, rooms, film, faq 
       creator: person(),
     },
     videoObject({ name: film.name, description: film.description, thumbnail: film.poster.src, src: film.src, duration: film.duration, published: film.published }),
-    {
-      '@type': 'FAQPage',
-      mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
-    },
     breadcrumbs(path, name),
   ])
 }

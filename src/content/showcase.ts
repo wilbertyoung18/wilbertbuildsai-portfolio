@@ -1,4 +1,4 @@
-import type { Faq, Image, ProductFilm, ProductTab } from './schema'
+import type { Image, ProductFilm, ProductTab } from './schema'
 
 /** The address shown in the browser-window bars around the film and the room screens. */
 export const showcaseHost = 'wilbertbuildsai.com'
@@ -111,22 +111,6 @@ export const productTabs: ProductTab[] = [
       },
     ],
     businessBenefit: 'Multiple business tools working together with less manual coordination.',
-  },
-]
-
-/** Three questions people ask about the product, answered the way the product itself answers them. */
-export const showcaseFaq: Faq[] = [
-  {
-    question: 'Who is Automated Client Onboarding for?',
-    answer: 'This automation is for service-based businesses, agencies, and consultants who onboard new clients regularly and want to eliminate manual handoffs between sales, billing, and delivery teams. It works best when you already use HubSpot, Stripe, Slack, Trello, Asana, and Gmail — or are willing to adopt them.',
-  },
-  {
-    question: 'Is there anything to install?',
-    answer: 'No installation required. The workflows run entirely in Zapier\'s cloud platform. You connect your existing accounts (HubSpot, Stripe, Slack, Trello, Asana, Gmail, Youform) once, and Zapier handles the rest. There\'s no code to deploy, no server to manage, and no browser extension to install.',
-  },
-  {
-    question: 'What does Automated Client Onboarding cost?',
-    answer: 'This is a personal automation project, not a paid product. The cost to run it depends on your Zapier plan and the volume of tasks — each new client triggers roughly 15–20 tasks across the four Zaps. On Zapier\'s Professional plan ($49/month for 2,000 tasks), you could onboard approximately 100–130 clients per month within the included task allowance.',
   },
 ]
 
