@@ -87,7 +87,8 @@ for (const [label, viewport, extra] of [
       `${label}: stages build in order, never back`,
     )
     check(at[0].step === 0 && at[0.5].step >= 1 && at[1].step === 2, `${label}: rail walks Attract -> Nurture -> Convert (${at[0].step}, ${at[0.5].step}, ${at[1].step})`)
-    check(at[0.9].readout === 'System live', `${label}: readout says the system is live at the end (${at[0.9].readout})`)
+    // Phone reaches CONNECTED later in the section's scroll, so read it at the very end.
+    check(at[1].readout === 'System live', `${label}: readout says the system is live at the end (${at[1].readout})`)
     check(at[0.12].packets >= 1 || at[0.3].packets >= 1, `${label}: a packet runs a link while it draws`)
     check(at[0.5].fitsPin, `${label}: everything fits the pinned screen`)
     check(!at[0.5].overflowX, `${label}: no sideways scroll`)
@@ -98,12 +99,12 @@ for (const [label, viewport, extra] of [
       await page.locator('[data-fl-node="booked"]').tap()
       await page.waitForTimeout(1000)
       let s = await read(page)
-      check(s.viewBox !== '0 15 1200 545' && s.inspect === 'Call Booked' && s.pager === '03 / 11', `${label}: tap zooms onto the stage and inspects it (${s.viewBox}, ${s.inspect}, ${s.pager})`)
+      check(s.viewBox !== '0 15 1200 545' && s.inspect === 'Client Booked' && s.pager === '03 / 11', `${label}: tap zooms onto the stage and inspects it (${s.viewBox}, ${s.inspect}, ${s.pager})`)
       await shot(page, `${label}-zoom`)
       await page.getByRole('button', { name: 'Next stage' }).tap()
       await page.waitForTimeout(900)
       s = await read(page)
-      check(s.inspect === 'Reminder One' && s.pager === '04 / 11', `${label}: next moves to the following stage (${s.inspect})`)
+      check(s.inspect === '24hr Reminder' && s.pager === '04 / 11', `${label}: next moves to the following stage (${s.inspect})`)
       await page.locator('[data-fl-node="day"]').tap()
       await page.waitForTimeout(900)
       s = await read(page)
@@ -114,7 +115,7 @@ for (const [label, viewport, extra] of [
       await page.locator('[data-fl-node="call"] .fl__box').hover()
       await page.waitForTimeout(600)
       const s = await read(page)
-      check(s.inspect === 'Intro Call', `${label}: hovering a stage inspects it (${s.inspect})`)
+      check(s.inspect === 'Discovery Call', `${label}: hovering a stage inspects it (${s.inspect})`)
       await shot(page, `${label}-hover`)
     }
   }

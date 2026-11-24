@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 // E2E check for the Proof page: head + JSON-LD (Quotation, VideoObject, no Review), the clips playing in
 // place (one at a time), the sticky band labels, images, overflow.
 // Usage: BASE=http://localhost:5190 node scripts/check-proof.mjs   (screens -> scripts/out/proof/)
@@ -18,6 +19,12 @@ const check = (ok, message) => {
 
 const scrollTo = (page, y) =>
   page.evaluate((y) => (window.__lenis ? window.__lenis.scrollTo(y, { immediate: true, force: true }) : window.scrollTo(0, y)), y)
+
+// Proof is intentionally hidden until showProofSection is true in src/app/routes.ts.
+if (!/showProofSection = true/.test(readFileSync(new URL('../src/app/routes.ts', import.meta.url), 'utf8'))) {
+  console.log('SKIP  /proof is hidden by showProofSection = false')
+  process.exit(0)
+}
 
 const browser = await chromium.launch()
 

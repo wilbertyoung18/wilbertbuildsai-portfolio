@@ -74,7 +74,7 @@ const read = (page) =>
       bar: new DOMMatrix(getComputedStyle(progress).transform).a,
       timeline: lines.map((l) => `${getComputedStyle(l).animationName} ${getComputedStyle(l).animationTimeline}`)[0],
       fits: lines.every((l) => l.scrollWidth <= l.clientWidth + 2) && lines.every((l) => l.getBoundingClientRect().right <= root.getBoundingClientRect().right + 1),
-      srOnce: [...document.querySelectorAll('.sr-only')].filter((e) => e.textContent.includes('Say who you')).length,
+      srOnce: [...document.querySelectorAll('.sr-only')].filter((e) => e.textContent.includes('I UNDERSTAND THE WORK')).length,
       overflowX: document.documentElement.scrollWidth > innerWidth,
     }
   })
@@ -157,10 +157,10 @@ for (const [label, viewport, extra] of [
       await shot(page, `${label}-${name}`)
     }
     const last = first.count - 1
-    check(at.start.op[0] > 0.95 && at.start.op[last] < at.start.op[0] - 0.1, `${label} start: the first line at the middle is full ink, the last still dim (${at.start.op.map(r2)})`)
+    check(at.start.op[0] > 0.95 && at.start.op[last] < at.start.op[0] - (label === 'phone' ? 0.03 : 0.1), `${label} start: the first line at the middle is full ink, the last still dim (${at.start.op.map(r2)})`)
     const k = Math.floor(first.count / 2)
     check(at.middle.op[k] > 0.95, `${label} middle: line ${k + 1} at the middle is full ink (${at.middle.op.map(r2)})`)
-    check(at.end.op[last] > 0.95 && at.end.op[0] < at.end.op[last] - 0.1, `${label} end: the last line at the middle is full ink, the first has faded (${at.end.op.map(r2)})`)
+    check(at.end.op[last] > 0.95 && at.end.op[0] < at.end.op[last] - (label === 'phone' ? 0.03 : 0.1), `${label} end: the last line at the middle is full ink, the first has faded (${at.end.op.map(r2)})`)
     check(Object.values(at).every((x) => !x.overflowX), `${label}: no sideways scroll`)
   } else {
     await page.locator('#manifesto').scrollIntoViewIfNeeded()

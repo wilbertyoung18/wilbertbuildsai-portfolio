@@ -46,12 +46,6 @@ const rooms = (page) =>
     }
   })
 
-const film = (page) =>
-  page.evaluate(() => {
-    const v = document.querySelector('.kt-film video')
-    return { paused: v.paused, t: v.currentTime, playButton: !!document.querySelector('.kt-film .pg-play') }
-  })
-
 const browser = await chromium.launch()
 
 for (const [label, viewport, extra, theme] of [
@@ -82,7 +76,7 @@ for (const [label, viewport, extra, theme] of [
       faq: document.querySelectorAll('.kt-faq dt').length,
       captions: document.querySelectorAll('.kt-room figcaption h3').length,
     }))
-    check(head.title.startsWith('Showcase') && head.title.endsWith('Your Name'), `title is the route's own, ends with the site name (${head.title})`)
+    check(head.title.startsWith('Showcase') && head.title.endsWith('Wilbert Young'), `title is the route's own, ends with the site name (${head.title})`)
     check(head.canonical?.endsWith('/showcase'), `canonical is /showcase (${head.canonical})`)
     check(head.h1.length === 1, `one h1 (${head.h1.join(' | ')})`)
     let types = []
@@ -95,31 +89,11 @@ for (const [label, viewport, extra, theme] of [
     check(head.faq === 3 && head.captions === 5, `visible FAQ (${head.faq}) and five room captions (${head.captions}) as real text`)
   }
 
-  // The film: plays by itself on screen (muted), pauses off screen; reduced motion shows the poster.
-  if (label === 'reduced') {
-    const f = await film(page)
-    check(f.paused && f.playButton, `${label}: film waits on its poster with a play button`)
-    await page.click('.kt-film .pg-play')
-    await page.waitForTimeout(1200)
-    const g = await film(page)
-    check(!g.paused && g.t > 0, `${label}: the play button starts it (t ${g.t.toFixed(2)})`)
-  } else {
-    await page.locator('.kt-film').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(1500)
-    const f = await film(page)
-    check(!f.paused && f.t > 0, `${label}: film plays by itself on screen (t ${f.t.toFixed(2)})`)
-    if (label === 'desk') {
-      await page.click('.kt-film__toggle')
-      await page.waitForTimeout(300)
-      check((await film(page)).paused, `${label}: the bar button pauses it`)
-      await page.click('.kt-film__toggle')
-      await page.waitForTimeout(600)
-      check(!(await film(page)).paused, `${label}: and plays it again`)
-    }
-    await page.locator('.kt-faq').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(800)
-    check((await film(page)).paused, `${label}: film pauses off screen`)
-  }
+  // The hero is a still preview now (FilmWindow is no longer mounted on this page).
+  await page.locator('.kt-film').scrollIntoViewIfNeeded()
+  await page.waitForFunction(() => document.querySelector('.kt-film img.kt-preview-image')?.complete, null, { timeout: 5000 }).catch(() => {})
+  const preview = await page.$eval('.kt-film img.kt-preview-image', (i) => ({ loaded: i.naturalWidth > 0, alt: i.alt }))
+  check(preview.loaded && preview.alt.length > 0, `${label}: hero preview image loads, with alt text`)
 
   let r = await rooms(page)
   if (walk) {

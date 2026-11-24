@@ -47,7 +47,9 @@ for (const c of [
   if (c.collapse) await page.click('.sb-toggle')
   else if (c.mobile) await page.evaluate(() => window.scrollBy(0, 1))
   else await page.mouse.move(700, 400)
-  await page.waitForTimeout(2200)
+  // Software WebGL can take longer than a fixed wait: poll for readiness, then let it draw.
+  await page.waitForFunction(() => document.querySelector('.app-bg')?.dataset.ready === 'true', null, { timeout: 15000 }).catch(() => {})
+  await page.waitForTimeout(400)
 
   const state = await page.evaluate(() => {
     const canvas = document.querySelector('.app-bg')

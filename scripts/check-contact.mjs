@@ -1,6 +1,6 @@
 // E2E check for /contact (pick A "Answers, then write"). Drives it like a visitor.
 // Usage: BASE=http://localhost:5190 node scripts/check-contact.mjs   (screens -> scripts/out/contact-*.png)
-import { chromium } from 'playwright'
+import { launchSafe } from './lib/safe-browser.mjs'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
@@ -15,7 +15,8 @@ const check = (ok, message) => {
 }
 const shot = (page, name) => page.screenshot({ path: fileURLToPath(new URL(`contact-${name}.png`, OUT)), fullPage: true })
 
-const browser = await chromium.launch()
+// Never reaches the real form: see lib/safe-browser.mjs.
+const { browser, submissions } = await launchSafe(BASE)
 
 for (const run of [
   { name: 'desk-dark', viewport: { width: 1440, height: 900 }, theme: 'dark' },
@@ -42,7 +43,7 @@ for (const run of [
     robots: document.querySelector('meta[name="robots"]')?.content ?? null,
     ld: [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => JSON.parse(s.textContent)['@graph'].map((n) => n['@type'])).flat(),
   }))
-  check(head.title.startsWith('Contact') && head.title.endsWith('Your Name') && head.h1.length === 1 && head.h1[0] === 'Tell me what you need built.', `${tag}: title + one h1 (${head.h1})`)
+  check(head.title.startsWith('Contact') && head.title.endsWith('Wilbert Young') && head.h1.length === 1 && head.h1[0].replace(/\s+/g, '') === 'TELLMEWHEREYOURLEADSSTOP.', `${tag}: title + one h1 (${head.h1})`)
   check(head.robots === null, `${tag}: indexable (no noindex placeholder)`)
   check(['ContactPage', 'FAQPage', 'BreadcrumbList'].every((t) => head.ld.includes(t)), `${tag}: JSON-LD ${head.ld}`)
 
@@ -55,8 +56,8 @@ for (const run of [
   check(summaryH >= 44, `${tag}: question rows are 44px+ targets (${summaryH})`)
 
   const socials = await page.$$eval('.ct-direct .social-key', (a) => a.map((x) => x.title))
-  check(socials.length === 5 && socials.at(-1) === 'Discord', `${tag}: socials under the answers (${socials})`)
-  check((await page.$eval('.ct-mail', (a) => a.getAttribute('href'))).startsWith('mailto:you@example.com'), `${tag}: direct address is the site email`)
+  check(socials.length === 4 && socials.at(-1) === 'OnlineJobsPH', `${tag}: socials under the answers (${socials})`)
+  check((await page.$eval('.ct-mail', (a) => a.getAttribute('href'))).startsWith('mailto:wilbertyoung18@gmail.com'), `${tag}: direct address is the site email`)
 
   await page.click('.ct-send')
   await page.waitForTimeout(100)
@@ -67,16 +68,16 @@ for (const run of [
   check(fontSize >= 16, `${tag}: inputs are 16px+ so iOS does not zoom on focus (${fontSize})`)
   if (tag === 'desk-dark') await shot(page, `${tag}-error`)
 
+  const sentBefore = submissions.length
   await page.fill('input[name="firstName"]', 'Dana')
   await page.fill('input[name="lastName"]', 'Reyes')
   await page.fill('input[name="email"]', 'dana@example.com')
   await page.fill('textarea[name="message"]', 'A short note about the project.')
   await page.click('.ct-send')
   await page.waitForTimeout(300)
-  const mailto = await page.evaluate(() => window.__mailto)
-  check(mailto?.startsWith('mailto:you@example.com?subject=Project%20inquiry&body=Dana%20Reyes'), `${tag}: send opens the mail app, addressed and laid out`)
+  const sent = submissions.at(-1)
+  check(submissions.length === sentBefore + 1 && sent?.url.endsWith('/f/xoeeqevo') && sent.body.includes('dana@example.com'), `${tag}: send posts once, to the MOCKED Formspree endpoint`)
   check((await page.$('.ct-done h3')) !== null && (await page.evaluate(() => document.activeElement?.tagName)) === 'H3', `${tag}: sent state shows and takes focus`)
-  check((await page.$eval('.ct-done__fallback a', (a) => a.getAttribute('href'))) === 'mailto:you@example.com', `${tag}: sent state also gives the address (no mail app opened)`)
   await page.click('.ct-done__actions .pg-btn:last-child')
   await page.waitForTimeout(150)
   check((await page.$('.ct-form')) !== null && (await page.evaluate(() => document.activeElement?.getAttribute('name'))) === 'firstName', `${tag}: Write another brings the form back, focus on the first field`)
