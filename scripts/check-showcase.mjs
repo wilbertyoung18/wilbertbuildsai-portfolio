@@ -79,7 +79,7 @@ for (const [label, viewport, extra, theme] of [
       canonical: document.querySelector('link[rel=canonical]')?.href,
       h1: [...document.querySelectorAll('h1')].map((h) => h.textContent.trim()),
       ld: [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => s.textContent),
-      faq: document.querySelectorAll('.kt-faq dt').length,
+      faq: document.querySelectorAll('.kt-faq').length,
       captions: document.querySelectorAll('.kt-room figcaption h3').length,
     }))
     check(head.title.startsWith('Showcase') && head.title.endsWith('Your Name'), `title is the route's own, ends with the site name (${head.title})`)
@@ -91,8 +91,9 @@ for (const [label, viewport, extra, theme] of [
     } catch (e) {
       check(false, `JSON-LD parses (${e.message})`)
     }
-    for (const t of ['SoftwareApplication', 'VideoObject', 'FAQPage', 'BreadcrumbList']) check(types.includes(t), `JSON-LD has ${t}`)
-    check(head.faq === 3 && head.captions === 5, `visible FAQ (${head.faq}) and five room captions (${head.captions}) as real text`)
+    for (const t of ['SoftwareApplication', 'VideoObject', 'BreadcrumbList']) check(types.includes(t), `JSON-LD has ${t}`)
+    check(!types.includes('FAQPage'), 'no FAQPage JSON-LD (the questions moved to Contact)')
+    check(head.faq === 0 && head.captions === 5, `no Questions block (${head.faq}) and five room captions (${head.captions}) as real text`)
   }
 
   // The film: plays by itself on screen (muted), pauses off screen; reduced motion shows the poster.
@@ -116,7 +117,7 @@ for (const [label, viewport, extra, theme] of [
       await page.waitForTimeout(600)
       check(!(await film(page)).paused, `${label}: and plays it again`)
     }
-    await page.locator('.kt-faq').scrollIntoViewIfNeeded()
+    await page.locator('.kt-extra').first().scrollIntoViewIfNeeded()
     await page.waitForTimeout(800)
     check((await film(page)).paused, `${label}: film pauses off screen`)
   }
