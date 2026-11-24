@@ -464,6 +464,9 @@
   left: 50%;
   translate: -50% 0;
   display: flex;
+  /* Never wider than the screenshot: a wide workflow bar would otherwise widen the whole page on phones. */
+  width: max-content;
+  max-width: calc(100% - 16px);
   gap: 8px;
   padding: 6px 10px;
   border-radius: var(--radius-full);
@@ -507,9 +510,14 @@
 .kt-screen__workflow-selector {
   display: flex;
   gap: 6px;
+  /* Too many buttons for a phone: the row swipes sideways, so every workflow stays reachable. */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .kt-screen__workflow-btn {
+  flex: none;
   padding: 4px 10px;
   border: 1px solid var(--line);
   background: var(--surface);
@@ -536,7 +544,7 @@
 
 .kt-screen__workflow-btn:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: -2px; /* inset, because the scrolling row clips anything outside the button */
 }
 
 /* ---------- Room caption additions ---------- */
