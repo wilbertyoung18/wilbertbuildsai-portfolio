@@ -43,7 +43,7 @@ for (const run of [
     robots: document.querySelector('meta[name="robots"]')?.content ?? null,
     ld: [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => JSON.parse(s.textContent)['@graph'].map((n) => n['@type'])).flat(),
   }))
-  check(head.title.startsWith('Contact') && head.title.endsWith('Your Name') && head.h1.length === 1 && head.h1[0] === 'Tell me what you need built.', `${tag}: title + one h1 (${head.h1})`)
+  check(head.title.startsWith('Contact') && head.title.endsWith('Wilbert Young') && head.h1.length === 1 && head.h1[0].replace(/\s+/g, '') === 'TELLMEWHEREYOURLEADSSTOP.', `${tag}: title + one h1 (${head.h1})`)
   check(head.robots === null, `${tag}: indexable (no noindex placeholder)`)
   check(['ContactPage', 'FAQPage', 'BreadcrumbList'].every((t) => head.ld.includes(t)), `${tag}: JSON-LD ${head.ld}`)
 
@@ -56,8 +56,8 @@ for (const run of [
   check(summaryH >= 44, `${tag}: question rows are 44px+ targets (${summaryH})`)
 
   const socials = await page.$$eval('.ct-direct .social-key', (a) => a.map((x) => x.title))
-  check(socials.length === 5 && socials.at(-1) === 'Discord', `${tag}: socials under the answers (${socials})`)
-  check((await page.$eval('.ct-mail', (a) => a.getAttribute('href'))).startsWith('mailto:you@example.com'), `${tag}: direct address is the site email`)
+  check(socials.length === 4 && socials.at(-1) === 'OnlineJobsPH', `${tag}: socials under the answers (${socials})`)
+  check((await page.$eval('.ct-mail', (a) => a.getAttribute('href'))).startsWith('mailto:wilbertyoung18@gmail.com'), `${tag}: direct address is the site email`)
 
   await page.click('.ct-send')
   await page.waitForTimeout(100)

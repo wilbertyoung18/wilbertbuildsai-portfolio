@@ -41,7 +41,8 @@ const browser = await chromium.launch()
 
   await page.goto(`${BASE}/proof`)
   await settle(page)
-  check((await page.title()).startsWith('Proof | '), 'unique title on /proof (a page of its own; /work now redirects to /#work)')
+  // /proof is intentionally off until showProofSection is true in src/app/routes.ts.
+  check(/^(Proof|Page Not Found) \| /.test(await page.title()), 'unique title on /proof (live page, or not-found while the section is hidden)')
   await shot(page, 'desktop-expanded')
 
   const indicatorY = () => page.$eval('.sb-float .sb-indicator', (el) => new DOMMatrix(getComputedStyle(el).transform).m42)
@@ -51,7 +52,15 @@ const browser = await chromium.launch()
   const litCount = () => page.$$eval('.sb-float [data-highlighted="true"]', (l) => l.length)
 
   check(!(await indicatorShown()) && (await litCount()) === 0, 'nothing highlighted at rest')
-  check((await page.$eval('.sb-float [data-nav-id="proof"]', (el) => getComputedStyle(el).color)) !== (await page.$eval('.sb-float [data-nav-id="home"]', (el) => getComputedStyle(el).color)), 'current page marked in blue text')
+  // /proof is a not-found page while hidden, so check the current-page colour on /showcase.
+  {
+    const cur = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+    await cur.goto(`${BASE}/showcase`)
+    await settle(cur)
+    const color = (id) => cur.$eval(`.sb-float [data-nav-id="${id}"]`, (el) => getComputedStyle(el).color)
+    check((await color('showcase')) !== (await color('home')), 'current page marked in blue text')
+    await cur.close()
+  }
 
   // Logo: the light-theme file is the one showing, and it actually loaded.
   const logo = await page.$$eval('.sb-float .sb-logo__mark img', (imgs) =>
@@ -63,22 +72,22 @@ const browser = await chromium.launch()
   const social = await page.$$eval('.sb-float .social-key', (links) =>
     links.map((a) => ({ label: a.getAttribute('title'), href: a.getAttribute('href'), blank: a.target === '_blank', h: a.offsetHeight })),
   )
-  check(social.map((s) => s.label).join(',') === 'LinkedIn,GitHub,X,Facebook,Discord', `socials in order (${social.map((s) => s.label)})`)
+  check(social.map((s) => s.label).join(',') === 'LinkedIn,Facebook,Upwork,OnlineJobsPH', `socials in order (${social.map((s) => s.label)})`)
   check(social.every((s) => s.blank && s.href && s.h >= 44), 'socials open in a new tab with 44px targets')
   check((await page.$('.sb-float .sb-search')) === null, 'search field is gone from the card')
-  check((await page.$$('.sb-float .social-key svg')).length === social.length, 'every social key draws its mark')
+  check((await page.$$eval('.sb-float .social-key', (k) => k.filter((x) => x.querySelector('svg, img')).length)) === social.length, 'every social key draws its mark')
 
   await page.hover('.sb-float [data-nav-id="services"]')
   await settle(page)
-  await page.hover('.sb-float [data-nav-id="proof"]')
+  await page.hover('.sb-float [data-nav-id="showcase"]')
   await settle(page)
-  check((await indicatorShown()) && (await indicatorY()) === (await itemY('proof')), 'highlight glides to the hovered item')
+  check((await indicatorShown()) && (await indicatorY()) === (await itemY('showcase')), 'highlight glides to the hovered item')
   await shot(page, 'desktop-hover')
 
   await page.mouse.move(900, 450)
   await settle(page)
   check(!(await indicatorShown()) && (await litCount()) === 0, 'highlight clears when the pointer leaves')
-  check((await indicatorY()) === (await itemY('proof')), 'highlight fades out in place (no slide on leave)')
+  check((await indicatorY()) === (await itemY('showcase')), 'highlight fades out in place (no slide on leave)')
 
   await page.click('.sb-toggle')
   await settle(page)
@@ -89,10 +98,11 @@ const browser = await chromium.launch()
   const rail = await page.evaluate(() => {
     const panel = document.querySelector('.sb-float .sb-panel').getBoundingClientRect()
     const pic = document.querySelector('.sb-float .sb-pic').getBoundingClientRect()
-    const mark = document.querySelector('.sb-float .sb-logo__mark').getBoundingClientRect()
+    // Collapsed, the rail shows the wordmark (the mark is hidden by design).
+    const mark = [...document.querySelectorAll('.sb-float .sb-logo__wordmark img, .sb-float .sb-logo__wordmark svg')].find((e) => e.getBoundingClientRect().width > 0)?.getBoundingClientRect() ?? { x: NaN, width: 0 }
     return { pic: Math.round(pic.x + pic.width / 2 - panel.x), size: Math.round(pic.width), mark: Math.round(mark.x + mark.width / 2 - panel.x) }
   })
-  check(rail.pic === 38 && rail.size === 44 && rail.mark === 38, `picture shrinks to 44px and centers on the rail with the logo mark (${JSON.stringify(rail)})`)
+  check(rail.pic === 38 && rail.size === 44 && rail.mark === 38, `picture shrinks to 44px and centers on the rail with the wordmark (${JSON.stringify(rail)})`)
   // On the rail a visitor points at the icon (x = 38), not the clipped-away row center.
   await page.hover('.sb-float [data-nav-id="services"]', { position: { x: 38, y: 20 } })
   await settle(page)

@@ -109,7 +109,7 @@ for (const [label, viewport, extra] of [
     await shot(page, label)
   } else {
     const seq = await walk(page, desktop ? 60 : 50)
-    check(seq.every((r, i) => r.landed.every((l, k) => !l || k === 0 || r.landed[k - 1])), `${label}: cards land on the pile in order`)
+    { const bad = seq.find((r) => !r.landed.every((l, k) => !l || k === 0 || r.landed[k - 1])); check(!bad, `${label}: cards land on the pile in order${bad ? ' (' + JSON.stringify(bad.landed) + ')' : ''}`) }
     const start = seq.find((r) => r.landed[0] && !r.landed[1])
     const middle = seq.find((r) => r.landed[2] && !r.landed[3])
     const end = seq.find((r) => r.landed.every(Boolean))
@@ -154,7 +154,7 @@ for (const [label, viewport, extra] of [
       await page.locator('#services [data-card]').first().click()
       await page.waitForTimeout(1200)
       const path = await page.evaluate(() => location.pathname)
-      check(path === '/work/screens', `${label}: the first card opens its Work chapter (${path})`)
+      check(path === '/work/workflow-automation', `${label}: the first card opens its Work chapter (${path})`)
       await page.keyboard.press('Escape')
       await page.waitForTimeout(1000)
     }
@@ -162,7 +162,7 @@ for (const [label, viewport, extra] of [
 
   // Work bento logo faces: only the chapters with no landscape capture (side projects and experiments).
   if (label === 'desk' || label === 'phone') {
-    for (const id of ['side-projects', 'experiments']) {
+    for (const id of ['rag-knowledge', 'chat-messaging']) {
       await page.locator(`#work a[href="/work/${id}"]`).scrollIntoViewIfNeeded()
       await page.waitForTimeout(900)
       await shot(page, `${label}-face-${id}`)
@@ -174,13 +174,10 @@ for (const [label, viewport, extra] of [
         loaded: [...f.querySelectorAll('img')].every((img) => img.complete && img.naturalWidth > 0),
       })),
     )
-    // 3 logos fan out, 2 = mark + badge.
+    // Every current chapter has a capture, so no logo faces render. Any that return must load.
+    check(faces.every((f) => f.loaded), `${label}: any logo faces load (${faces.length})`)
     check(
-      faces.length === 2 && faces[0].chapter === '/work/side-projects' && faces[0].layout === 'fan' && faces[1].layout === 'badge' && faces.every((f) => f.loaded),
-      `${label}: the picture-less chapters are logo faces (fan, badge), every logo loaded (${faces.map((f) => `${f.chapter} ${f.layout}`).join(', ')})`,
-    )
-    check(
-      await page.evaluate(() => getComputedStyle(document.querySelector('.wa__tile')).boxShadow.includes('inset')),
+      await page.evaluate(() => getComputedStyle(document.querySelector('.wb__tile'), '::after').boxShadow.includes('inset')),
       `${label}: Work card tiles carry the emboss bevel`,
     )
   }

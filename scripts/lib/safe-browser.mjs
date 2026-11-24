@@ -26,7 +26,7 @@ export async function launchSafe(base) {
       const url = new URL(request.url())
       if (isFormspree(url.hostname)) {
         if (request.method() === 'POST') submissions.push({ url: request.url(), body: request.postData() ?? '' })
-        return route.fulfill({ status: 200, contentType: 'application/json', headers: CORS, body: '{"ok":true,"mock":true}' })
+        return route.fulfill({ status: 200, contentType: 'application/json', headers: CORS, body: '{"ok":true,"mock":true,"next":"https://formspree.io/thanks"}' })
       }
       if (url.origin === origin || ['data:', 'blob:'].includes(url.protocol)) return route.continue()
       blocked.push(request.url())
