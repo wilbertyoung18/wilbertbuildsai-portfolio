@@ -566,6 +566,21 @@
   font-style: italic;
 }
 
+/* 44px tall invisible tap area on touch widths; the visible controls keep their size. */
+@media (max-width: 1023px) {
+  .kt-screen__nav-btn,
+  .kt-screen__workflow-btn {
+    position: relative;
+  }
+  .kt-screen__nav-btn::after,
+  .kt-screen__workflow-btn::after {
+    content: '';
+    position: absolute;
+    inset-block: calc((100% - 44px) / 2);
+    inset-inline: -3px;
+  }
+}
+
 /* ---------- Responsive adjustments for controls ---------- */
 
 @container (max-width: 640px) {
