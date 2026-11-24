@@ -1,7 +1,7 @@
 import type { FocusEvent, MouseEvent, PointerEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
 import { ArrowUpRight, Moon } from '@phosphor-icons/react'
-import { NAV_GROUPS, navEntries, navTarget, pages, type NavEntry, showDiscoverSection, showProofInDiscover, showResourcesInDiscover } from '@/app/routes'
+import { NAV_GROUPS, navEntries, navTarget, pages, sections, type NavEntry, showDiscoverSection, showProofInDiscover, showResourcesInDiscover } from '@/app/routes'
 import { useSectionInView } from '@/hooks/use-section-in-view'
 import { useTheme } from '@/hooks/use-theme'
 import { scrollToSection } from '@/lib/motion/smooth-scroll'
@@ -24,15 +24,19 @@ function activePageId(pathname: string): string | null {
   return match?.group ? match.id : null
 }
 
-/** The page entries that point at a Home section (Work, Services). The section on screen lights its entry on Home. */
-const sectionPages = pages.filter((page) => page.section)
-const sectionIds = sectionPages.map((page) => page.section!)
+/**
+ * The entries that point at a Home section (Work, Services, 3D Experience...). The section on screen lights its entry on Home.
+ * The 3D Experience and Wilbert AI blocks sit inside Showcase, so they come first: the hook returns the first id in this list
+ * that crosses the viewport middle, and the more specific block has to win over the section around it.
+ */
+const sectionEntries = [...sections, ...pages.filter((page) => page.section)]
+const sectionIds = sectionEntries.map((entry) => entry.section!)
 
 export function SidebarNav({ collapsed, onNavigate, onHoverChange }: Props) {
   const { pathname } = useLocation()
   const onHome = pathname === '/'
   const sectionInView = useSectionInView(sectionIds, onHome)
-  const activeId = sectionPages.find((page) => page.section === sectionInView)?.id ?? activePageId(pathname)
+  const activeId = sectionEntries.find((entry) => entry.section === sectionInView)?.id ?? activePageId(pathname)
 
   // On Home, Home and section entries glide instead of navigating (Home to the top, Work to its section).
   const glide = (event: MouseEvent, section: string) => {
@@ -91,14 +95,6 @@ export function SidebarNav({ collapsed, onNavigate, onHoverChange }: Props) {
     )
 
     if (entry.kind === 'external') {
-      if (entry.sameTab) {
-        return (
-          <a key={entry.id} href={entry.href} className="sb-item" {...itemState(entry.id)} {...handlers}>
-            {icon}
-            <span className="sb-item__label sb-fade">{entry.label}</span>
-          </a>
-        )
-      }
       return (
         <a key={entry.id} href={entry.href} target="_blank" rel="noreferrer" className="sb-item" {...itemState(entry.id)} {...handlers}>
           {icon}
@@ -113,7 +109,7 @@ export function SidebarNav({ collapsed, onNavigate, onHoverChange }: Props) {
       <>
         {icon}
         <span className="sb-item__label sb-fade">{entry.label}</span>
-        {entry.badge ? (
+        {entry.kind === 'page' && entry.badge ? (
           <span className="sb-badge sb-fade" aria-label={`${entry.badge} builds`}>
             {entry.badge}
           </span>
@@ -122,8 +118,8 @@ export function SidebarNav({ collapsed, onNavigate, onHoverChange }: Props) {
     )
 
     // A section entry is a plain link to /#section; aria-current follows the scroll, not the path.
-    if (entry.section) {
-      const section = entry.section
+    if (entry.kind === 'section' || entry.section) {
+      const section = entry.section!
       return (
         <Link
           key={entry.id}

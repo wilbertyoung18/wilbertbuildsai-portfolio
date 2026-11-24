@@ -2,11 +2,11 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { ArrowUpRight, MagnifyingGlass } from '@phosphor-icons/react'
 import { useShell } from '@/app/shell-context'
-import { externals, navTarget, pages, type NavEntry } from '@/app/routes'
+import { externals, navTarget, pages, sections, type NavEntry } from '@/app/routes'
 import { scrollToSection } from '@/lib/motion/smooth-scroll'
 import './search.css'
 
-const ENTRIES: NavEntry[] = [...pages, ...externals]
+const ENTRIES: NavEntry[] = [...pages, ...sections, ...externals]
 
 function matches(entry: NavEntry, query: string): boolean {
   const haystack = `${entry.label} ${entry.description}`.toLowerCase()
@@ -50,8 +50,7 @@ export function SearchPalette() {
 
   const open = (entry: NavEntry) => {
     close()
-    if (entry.kind === 'external' && entry.sameTab) window.location.assign(entry.href)
-    else if (entry.kind === 'external') window.open(entry.href, '_blank', 'noreferrer')
+    if (entry.kind === 'external') window.open(entry.href, '_blank', 'noreferrer')
     else if (entry.section && window.location.pathname === '/') scrollToSection(entry.section)
     else navigate(navTarget(entry))
   }
@@ -114,7 +113,7 @@ export function SearchPalette() {
                 <span className="search__label">{entry.label}</span>
                 <span className="search__desc">{entry.description}</span>
               </span>
-              {entry.kind === 'external' && !entry.sameTab ? <ArrowUpRight size={14} aria-hidden /> : null}
+              {entry.kind === 'external' ? <ArrowUpRight size={14} aria-hidden /> : null}
             </li>
           )
         })}

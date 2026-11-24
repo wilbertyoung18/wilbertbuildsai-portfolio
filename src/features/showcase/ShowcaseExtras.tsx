@@ -23,7 +23,7 @@ function ExtraBlock({ item, level }: { item: ShowcaseExtra; level: 2 | 3 }) {
     : {}
 
   return (
-    <section className="kt-extra" aria-labelledby={`kt-extra-${item.id}`}>
+    <section id={item.id} className="kt-extra" aria-labelledby={`kt-extra-${item.id}`}>
       <PageHeader level={level} id={`kt-extra-${item.id}`} eyebrow={item.eyebrow} titleThin={item.titleThin} titleBold={item.titleBold} lede={item.lede}>
         <div className="kt-cta">
           <a className="pg-btn" href={item.cta.href} {...tab}>

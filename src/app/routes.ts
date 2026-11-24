@@ -53,15 +53,24 @@ export type ExternalRoute = {
   kind: 'external'
   id: string
   href: string
-  /** Opens in this tab with a full page load (a static page on this domain, outside the router). */
-  sameTab?: true
   label: string
   description: string
   icon: Icon
   group: NavGroupId
 }
 
-export type NavEntry = PageRoute | ExternalRoute
+/** A sidebar entry with no page of its own: it scrolls Home to the section with this id. */
+export type SectionRoute = {
+  kind: 'section'
+  id: string
+  label: string
+  description: string
+  icon: Icon
+  group: NavGroupId
+  section: string
+}
+
+export type NavEntry = PageRoute | SectionRoute | ExternalRoute
 
 /** Every page title ends with your name (content/site.ts). */
 const SUFFIX = site.name
@@ -177,35 +186,42 @@ export const externals: ExternalRoute[] = [
     icon: Compass,
     group: 'discover',
   },
+]
+
+/** Entries that scroll Home to a section (inside Showcase) instead of opening a page. The ids match ShowcaseExtras. */
+export const sections: SectionRoute[] = [
   {
-    kind: 'external',
+    kind: 'section',
     id: 'site-3d',
-    href: '/3d/',
-    sameTab: true,
+    section: '3d-experience',
     label: '3D Experience',
     description: 'An interactive 3D version of this portfolio.',
     icon: CubeFocus,
     group: 'discover',
   },
   {
-    kind: 'external',
+    kind: 'section',
     id: 'wilbert-ai',
-    href: 'https://wilbert-ai-studio.vercel.app/',
+    section: 'wilbert-ai',
     label: 'Wilbert AI',
-    description: 'A custom-built AI automation assistant for n8n, Vapi, webhooks and data workflows. Try the live demo.',
+    description: 'A custom-built AI automation assistant for n8n, Vapi, webhooks and data workflows.',
     icon: Robot,
     group: 'discover',
   },
 ]
 
-/** Sidebar entries per group, in registry order (pages first, then external links). */
+/** Sidebar entries per group, in registry order (pages, then section links, then external links). */
 export function navEntries(group: NavGroupId): NavEntry[] {
-  return [...pages.filter((p) => p.group === group), ...externals.filter((e) => e.group === group)]
+  return [
+    ...pages.filter((p) => p.group === group),
+    ...sections.filter((s) => s.group === group),
+    ...externals.filter((e) => e.group === group),
+  ]
 }
 
 /** Where a nav entry goes: its Home section when it has one, else its page. */
-export function navTarget(page: PageRoute): string {
-  return page.section ? `/#${page.section}` : page.path
+export function navTarget(entry: PageRoute | SectionRoute): string {
+  return entry.section ? `/#${entry.section}` : (entry as PageRoute).path
 }
 
 export const notFoundTitle = `Page Not Found | ${SUFFIX}`
