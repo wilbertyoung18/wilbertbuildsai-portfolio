@@ -1,6 +1,6 @@
 // E2E check for /contact (pick A "Answers, then write"). Drives it like a visitor.
 // Usage: BASE=http://localhost:5190 node scripts/check-contact.mjs   (screens -> scripts/out/contact-*.png)
-import { chromium } from 'playwright'
+import { launchSafe } from './lib/safe-browser.mjs'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
@@ -15,7 +15,8 @@ const check = (ok, message) => {
 }
 const shot = (page, name) => page.screenshot({ path: fileURLToPath(new URL(`contact-${name}.png`, OUT)), fullPage: true })
 
-const browser = await chromium.launch()
+// Never reaches the real form: see lib/safe-browser.mjs.
+const { browser, submissions } = await launchSafe(BASE)
 
 for (const run of [
   { name: 'desk-dark', viewport: { width: 1440, height: 900 }, theme: 'dark' },
@@ -67,16 +68,16 @@ for (const run of [
   check(fontSize >= 16, `${tag}: inputs are 16px+ so iOS does not zoom on focus (${fontSize})`)
   if (tag === 'desk-dark') await shot(page, `${tag}-error`)
 
+  const sentBefore = submissions.length
   await page.fill('input[name="firstName"]', 'Dana')
   await page.fill('input[name="lastName"]', 'Reyes')
   await page.fill('input[name="email"]', 'dana@example.com')
   await page.fill('textarea[name="message"]', 'A short note about the project.')
   await page.click('.ct-send')
   await page.waitForTimeout(300)
-  const mailto = await page.evaluate(() => window.__mailto)
-  check(mailto?.startsWith('mailto:you@example.com?subject=Project%20inquiry&body=Dana%20Reyes'), `${tag}: send opens the mail app, addressed and laid out`)
+  const sent = submissions.at(-1)
+  check(submissions.length === sentBefore + 1 && sent?.url.endsWith('/f/xoeeqevo') && sent.body.includes('dana@example.com'), `${tag}: send posts once, to the MOCKED Formspree endpoint`)
   check((await page.$('.ct-done h3')) !== null && (await page.evaluate(() => document.activeElement?.tagName)) === 'H3', `${tag}: sent state shows and takes focus`)
-  check((await page.$eval('.ct-done__fallback a', (a) => a.getAttribute('href'))) === 'mailto:you@example.com', `${tag}: sent state also gives the address (no mail app opened)`)
   await page.click('.ct-done__actions .pg-btn:last-child')
   await page.waitForTimeout(150)
   check((await page.$('.ct-form')) !== null && (await page.evaluate(() => document.activeElement?.getAttribute('name'))) === 'firstName', `${tag}: Write another brings the form back, focus on the first field`)
