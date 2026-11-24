@@ -220,22 +220,24 @@
 /* ---------- Hover (desktop pointers only) ---------- */
 
 @media (hover: hover) {
-  .ft__card:hover {
+  /* Hover the stationary <li>, not the <a>: the card lifts 4px, so hovering the card
+     itself would drop it out from under the pointer and thrash :hover + play/pause. */
+  .ft__item:hover .ft__card {
     border-color: var(--ft-cyan);
     transform: translateY(-4px);
     box-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7);
   }
-  .ft__card:hover .ft__img {
+  .ft__item:hover .ft__img {
     transform: scale(1.04);
   }
-  .ft__card:hover .ft__video {
+  .ft__item:hover .ft__video {
     opacity: 1;
   }
-  .ft__card:hover .ft__chip {
+  .ft__item:hover .ft__chip {
     opacity: 1;
     transform: translateY(0);
   }
-  .ft__card:hover .ft__btn {
+  .ft__item:hover .ft__btn {
     background: var(--ft-cyan);
     color: #06222a;
   }

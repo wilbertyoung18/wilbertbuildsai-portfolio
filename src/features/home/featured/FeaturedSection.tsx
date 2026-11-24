@@ -40,13 +40,11 @@ function FeaturedCardView({ card }: { card: FeaturedCard }) {
     : `${card.name}: ${card.button} (opens in a new tab)`
 
   return (
-    <li className="ft__item">
+    <li className="ft__item" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <a
         className="ft__card"
         {...linkProps}
         aria-label={label}
-        onMouseEnter={onEnter}
-        onMouseLeave={onLeave}
       >
         <span className="ft__media">
           <img
@@ -61,13 +59,11 @@ function FeaturedCardView({ card }: { card: FeaturedCard }) {
           <video
             ref={videoRef}
             className="ft__video"
-            poster={card.poster}
             muted
             loop
             playsInline
             preload="none"
             aria-hidden
-            tabIndex={-1}
           >
             {card.sources.map((s) => (
               <source key={s.src} src={s.src} type={s.type} />
