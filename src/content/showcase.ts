@@ -129,3 +129,48 @@ export const showcaseFaq: Faq[] = [
     answer: 'This is a personal automation project, not a paid product. The cost to run it depends on your Zapier plan and the volume of tasks — each new client triggers roughly 15–20 tasks across the four Zaps. On Zapier\'s Professional plan ($49/month for 2,000 tasks), you could onboard approximately 100–130 clients per month within the included task allowance.',
   },
 ]
+
+/* ---------- The two outbound projects after the Client Onboarding content ---------- */
+
+export type ShowcaseExtra = {
+  id: string
+  eyebrow: string
+  titleThin: string
+  titleBold: string
+  lede: string
+  cta: { label: string; href: string; newTab: boolean }
+  meta: string
+  windowUrl: string
+  image: { src: string; alt: string; width: number; height: number }
+  /** Muted hover clip (desktop, motion allowed). Leave out for a static image. */
+  clip?: { type: string; src: string }[]
+}
+
+export const showcaseExtras: ShowcaseExtra[] = [
+  {
+    id: '3d-experience',
+    eyebrow: 'Showcase · 3D Experience',
+    titleThin: 'Step into the',
+    titleBold: '3D Experience.',
+    lede: 'Explore the portfolio as an interactive 3D scene. Orbit, scroll and look around.',
+    cta: { label: 'Explore in 3D', href: '/3d/', newTab: false },
+    meta: 'Interactive · 3D scene',
+    windowUrl: `${showcaseHost} / 3d`,
+    image: { src: '/3d/hero-poster.webp', alt: 'The 3D portfolio scene, an orbiting interactive view of the work.', width: 2688, height: 1520 },
+    clip: [
+      { type: 'video/webm', src: '/showcase/3d-preview.webm' },
+      { type: 'video/mp4', src: '/showcase/3d-preview.mp4' },
+    ],
+  },
+  {
+    id: 'wilbert-ai',
+    eyebrow: 'Showcase · Wilbert AI',
+    titleThin: 'Meet',
+    titleBold: 'Wilbert AI.',
+    lede: 'A custom-built AI automation assistant for n8n, Vapi, webhooks and data workflows.',
+    cta: { label: 'Try the live demo', href: 'https://wilbert-ai-studio.vercel.app/', newTab: true },
+    meta: 'Live demo · AI automation',
+    windowUrl: 'wilbert-ai-studio.vercel.app / demo',
+    image: { src: '/showcase/wilbert-ai.webp', alt: 'The Wilbert AI assistant landing screen, asking how it can help, with a message box.', width: 1600, height: 800 },
+  },
+]

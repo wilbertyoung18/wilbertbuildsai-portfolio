@@ -7,6 +7,7 @@ import { showcaseFaq, showcaseFilm, showcaseHost, showcasePage, showcaseStats, p
 import { useScrollScene } from '@/hooks/use-scroll-scene'
 import { showcaseJsonLd } from '@/lib/seo'
 import { BrowserWindow } from './BrowserWindow'
+import { ShowcaseExtras } from './ShowcaseExtras'
 import { roomsScene } from './rooms-scene'
 import './showcase.css'
 
@@ -264,6 +265,8 @@ function ShowcaseBody({ nested }: { nested: boolean }) {
           ))}
         </dl>
       </section>
+
+      <ShowcaseExtras level={nested ? 3 : 2} />
     </>
   )
 }
