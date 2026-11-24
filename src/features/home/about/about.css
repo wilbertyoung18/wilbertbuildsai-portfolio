@@ -533,6 +533,14 @@ a.ab__cred:focus-visible,
   transition: color 400ms ease;
 }
 
+/* 44px tap target on touch widths; the negative margin cancels the padding so nothing moves. */
+@media (max-width: 1023px) {
+  .ab__cert-btn {
+    padding-block: 14px;
+    margin-block: -14px;
+  }
+}
+
 .ab__cert-btn:hover {
   color: var(--ink);
 }

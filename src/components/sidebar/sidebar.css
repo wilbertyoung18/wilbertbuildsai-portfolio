@@ -614,6 +614,13 @@
   opacity: 1;
 }
 
+/* Mobile drawer: rows touch, so the 44px tap target has to be the row itself. */
+@media (max-width: 1023px) {
+  .sb-panel {
+    --item-h: 44px;
+  }
+}
+
 /* ---------- Main content follows the sidebar ---------- */
 
 @media (min-width: 1024px) {
