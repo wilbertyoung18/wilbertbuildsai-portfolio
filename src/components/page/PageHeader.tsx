@@ -6,8 +6,8 @@ type Props = {
   titleThin: string
   titleBold: string
   lede: string
-  /** 1 on a standalone page (its one H1); 2 when the page runs as a Home section. */
-  level?: 1 | 2
+  /** 1 on a standalone page (its one H1); 2 when the page runs as a Home section; 3 for a block inside one. */
+  level?: 1 | 2 | 3
   /** The title's id, for the section's aria-labelledby. */
   id?: string
   children?: ReactNode
@@ -15,7 +15,7 @@ type Props = {
 
 /** The head of a standalone page: eyebrow, the title (thin over bold, as Home), the answer-first lede. */
 export function PageHeader({ eyebrow, titleThin, titleBold, lede, level = 1, id, children }: Props) {
-  const Title = level === 1 ? 'h1' : 'h2'
+  const Title = `h${level}` as 'h1' | 'h2' | 'h3'
   return (
     <header className="pg-head">
       <p className="pg-eyebrow">

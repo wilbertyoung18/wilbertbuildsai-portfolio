@@ -19,6 +19,7 @@
 /* ---------- Browser window ---------- */
 
 .kt-window {
+  position: relative; /* anchors the screenshot controls to their own window */
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -400,43 +401,6 @@
   }
 }
 
-/* ---------- Questions ---------- */
-
-.kt-faq {
-  display: grid;
-  gap: 0 clamp(28px, 4cqi, 56px);
-  margin-top: clamp(64px, 10vh, 112px);
-  padding-top: clamp(32px, 5vh, 48px);
-  border-top: 1px solid var(--line);
-}
-.kt-faq dl {
-  margin: 0;
-}
-.kt-faq dl > div {
-  padding: 0 0 26px;
-}
-.kt-faq dl > div + div {
-  padding-top: 26px;
-  border-top: 1px solid var(--line);
-}
-.kt-faq dt {
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-}
-.kt-faq dd {
-  margin: 8px 0 0;
-  max-width: 64ch;
-  color: var(--ink-2);
-  font-size: 15px;
-  line-height: 1.6;
-}
-@media (min-width: 1024px) {
-  .kt-faq {
-    grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
-  }
-}
-
 /* ---------- Phones ---------- */
 
 @container (max-width: 640px) {
@@ -589,5 +553,77 @@
   .kt-screen__workflow-btn {
     padding: 3px 8px;
     font-size: 10px;
+  }
+}
+
+/* Touch and narrow screens: real 44px targets. The row still swipes, so the bar never widens the page. */
+@media (max-width: 1023px), (pointer: coarse) {
+  /* A strip under the screenshot for the bar, so the bigger buttons never cover the image. */
+  .kt-window:has(.kt-screen__controls) {
+    padding-bottom: 56px;
+  }
+  .kt-screen__controls {
+    bottom: 5px;
+    gap: 0;
+    padding-block: 0;
+  }
+  .kt-screen__nav-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .kt-screen__workflow-btn {
+    min-height: 44px;
+  }
+}
+
+/* ---------- 3D Experience + Wilbert AI: same header, button and window as the blocks above ---------- */
+
+.kt-extra {
+  margin-top: clamp(64px, 10vh, 112px);
+  padding-top: clamp(32px, 5vh, 48px);
+  border-top: 1px solid var(--line);
+}
+.kt-extra__frame {
+  margin-top: clamp(28px, 5vh, 40px);
+}
+.kt-extra__screen {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.kt-extra__img,
+.kt-extra__clip {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.kt-extra__clip {
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.kt-extra__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--line-strong);
+  background: rgba(var(--surface-rgb), 0.9);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+@media (min-width: 720px) {
+  .kt-extra__screen {
+    aspect-ratio: 2 / 1;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .kt-extra__frame:hover .kt-extra__clip {
+    opacity: 1;
   }
 }

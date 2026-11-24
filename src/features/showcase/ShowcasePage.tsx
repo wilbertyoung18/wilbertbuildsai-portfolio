@@ -3,10 +3,11 @@ import { ArrowUpRight } from '@phosphor-icons/react'
 import { PageMeta } from '@/app/PageMeta'
 import type { PageRoute } from '@/app/routes'
 import { PageHeader } from '@/components/page/PageHeader'
-import { showcaseFaq, showcaseFilm, showcaseHost, showcasePage, showcaseStats, productTabs } from '@/content/showcase'
+import { showcaseFilm, showcaseHost, showcasePage, showcaseStats, productTabs } from '@/content/showcase'
 import { useScrollScene } from '@/hooks/use-scroll-scene'
 import { showcaseJsonLd } from '@/lib/seo'
 import { BrowserWindow } from './BrowserWindow'
+import { ShowcaseExtras } from './ShowcaseExtras'
 import { roomsScene } from './rooms-scene'
 import './showcase.css'
 
@@ -28,7 +29,7 @@ function ShowcaseHeader({ nested }: { nested: boolean }) {
   )
 }
 
-/** Film, stats, rooms, questions. Nested = inside a Home section, so every heading steps down one level. */
+/** Film, stats, rooms, then 3D Experience and Wilbert AI. Nested = inside a Home section, so every heading steps down one level. */
 function ShowcaseBody({ nested }: { nested: boolean }) {
   const roomsRef = useRef<HTMLElement>(null)
   useScrollScene(roomsRef, roomsScene)
@@ -251,27 +252,15 @@ function ShowcaseBody({ nested }: { nested: boolean }) {
         </div>
       </section>
 
-      <section className="kt-faq" aria-labelledby="kt-faq-title">
-        <H2 id="kt-faq-title" className="pg-h2">
-          Questions
-        </H2>
-        <dl>
-          {showcaseFaq.map((f) => (
-            <div key={f.question}>
-              <dt>{f.question}</dt>
-              <dd>{f.answer}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      <ShowcaseExtras level={nested ? 3 : 2} />
     </>
   )
 }
 
 /**
  * Showcase, "the film stage": the product film under the headline,
- * a quiet stats strip, then the five rooms walked by the page scroll, then three questions answered
- * from the product's own FAQ. Every caption is real text; the screens only illustrate it.
+ * a quiet stats strip, then the five rooms walked by the page scroll, then 3D Experience and
+ * Wilbert AI. Every caption is real text; the screens only illustrate it.
  */
 export function ShowcasePage({ page }: { page: PageRoute }) {
   const c = showcasePage
@@ -282,7 +271,7 @@ export function ShowcasePage({ page }: { page: PageRoute }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: showcaseJsonLd({ path: page.path, name: page.label, description: c.lede, url: c.cta.href, rooms: productTabs, film: showcaseFilm, faq: showcaseFaq }),
+          __html: showcaseJsonLd({ path: page.path, name: page.label, description: c.lede, url: c.cta.href, rooms: productTabs, film: showcaseFilm }),
         }}
       />
       <ShowcaseHeader nested={false} />

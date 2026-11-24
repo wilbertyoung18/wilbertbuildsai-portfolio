@@ -1,4 +1,4 @@
-import type { Faq, Image, ProductFilm, ProductTab } from './schema'
+import type { Image, ProductFilm, ProductTab } from './schema'
 
 /** The address shown in the browser-window bars around the film and the room screens. */
 export const showcaseHost = 'wilbertbuildsai.com'
@@ -114,18 +114,47 @@ export const productTabs: ProductTab[] = [
   },
 ]
 
-/** Three questions people ask about the product, answered the way the product itself answers them. */
-export const showcaseFaq: Faq[] = [
+/* ---------- The two outbound projects after the Client Onboarding content ---------- */
+
+export type ShowcaseExtra = {
+  id: string
+  eyebrow: string
+  titleThin: string
+  titleBold: string
+  lede: string
+  cta: { label: string; href: string; newTab: boolean }
+  meta: string
+  windowUrl: string
+  image: { src: string; alt: string; width: number; height: number }
+  /** Muted hover clip (desktop, motion allowed). Leave out for a static image. */
+  clip?: { type: string; src: string }[]
+}
+
+export const showcaseExtras: ShowcaseExtra[] = [
   {
-    question: 'Who is Automated Client Onboarding for?',
-    answer: 'This automation is for service-based businesses, agencies, and consultants who onboard new clients regularly and want to eliminate manual handoffs between sales, billing, and delivery teams. It works best when you already use HubSpot, Stripe, Slack, Trello, Asana, and Gmail — or are willing to adopt them.',
+    id: '3d-experience',
+    eyebrow: 'Showcase · 3D Experience',
+    titleThin: 'Step into the',
+    titleBold: '3D Experience.',
+    lede: 'Explore the portfolio as an interactive 3D scene. Orbit, scroll and look around.',
+    cta: { label: 'Explore in 3D', href: '/3d/', newTab: false },
+    meta: 'Interactive · 3D scene',
+    windowUrl: `${showcaseHost} / 3d`,
+    image: { src: '/3d/hero-poster.webp', alt: 'The 3D portfolio scene, an orbiting interactive view of the work.', width: 2688, height: 1520 },
+    clip: [
+      { type: 'video/webm', src: '/showcase/3d-preview.webm' },
+      { type: 'video/mp4', src: '/showcase/3d-preview.mp4' },
+    ],
   },
   {
-    question: 'Is there anything to install?',
-    answer: 'No installation required. The workflows run entirely in Zapier\'s cloud platform. You connect your existing accounts (HubSpot, Stripe, Slack, Trello, Asana, Gmail, Youform) once, and Zapier handles the rest. There\'s no code to deploy, no server to manage, and no browser extension to install.',
-  },
-  {
-    question: 'What does Automated Client Onboarding cost?',
-    answer: 'This is a personal automation project, not a paid product. The cost to run it depends on your Zapier plan and the volume of tasks — each new client triggers roughly 15–20 tasks across the four Zaps. On Zapier\'s Professional plan ($49/month for 2,000 tasks), you could onboard approximately 100–130 clients per month within the included task allowance.',
+    id: 'wilbert-ai',
+    eyebrow: 'Showcase · Wilbert AI',
+    titleThin: 'Meet',
+    titleBold: 'Wilbert AI.',
+    lede: 'A custom-built AI automation assistant for n8n, Vapi, webhooks and data workflows.',
+    cta: { label: 'Try the live demo', href: 'https://wilbert-ai-studio.vercel.app/', newTab: true },
+    meta: 'Live demo · AI automation',
+    windowUrl: 'wilbert-ai-studio.vercel.app / demo',
+    image: { src: '/showcase/wilbert-ai.webp', alt: 'The Wilbert AI assistant landing screen, asking how it can help, with a message box.', width: 1600, height: 800 },
   },
 ]
