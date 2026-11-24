@@ -2,9 +2,10 @@
  * Home "Featured" section. Two full-width project cards in the 3D page's dark / cyan look, scoped
  * to `.ft` so the palette and the Space Grotesk / Inter fonts never leak into the rest of the
  * (light, Geist) site. The fonts are self-hosted (public/fonts/), font-display: swap and NOT
- * preloaded, so first paint and the home background are never blocked. Hover motion (card lift,
- * image zoom, the clip, the chip) lives behind `@media (hover: hover)` and is dropped under
- * prefers-reduced-motion; the poster alone carries phones and reduced-motion visitors.
+ * preloaded, so first paint and the home background are never blocked. Hover/focus motion (card
+ * lift, image + clip zoom, the clip, the chip) lives behind `@media (hover: hover)` / :focus-visible
+ * and is dropped under prefers-reduced-motion; the poster alone carries phones and reduced-motion
+ * visitors. Hover is bound to the stationary `.ft__item`, since the `.ft__card` itself lifts.
  */
 
 @font-face {
@@ -56,14 +57,14 @@
   font-family: var(--ft-display);
   font-weight: 500;
   font-size: 12px;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .ft__title {
   margin: 0 0 12px;
   color: var(--ft-ink);
   font-family: var(--ft-display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: clamp(1.9rem, 4.5vw, 3rem);
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -78,10 +79,12 @@
 /* ---------- The two cards ---------- */
 
 .ft__list {
-  /* minmax(0, 1fr), not an auto track, so a wide child can't push the grid past a 320px screen. */
+  /* minmax(0, 1fr), not an auto track, so a wide child can't push the grid past a 320px screen.
+     Capped at 1200px (left-aligned with the header) so cards don't balloon / upscale on wide screens. */
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--ft-gap);
+  max-width: calc(1200px + 2 * var(--ft-gutter));
   margin: 0;
   padding: 0 var(--ft-gutter);
   list-style: none;
@@ -124,7 +127,9 @@
 }
 .ft__video {
   opacity: 0;
-  transition: opacity var(--dur-fast, 440ms) var(--ft-ease);
+  transition:
+    opacity var(--dur-fast, 440ms) var(--ft-ease),
+    transform var(--dur-slow, 587ms) var(--ft-ease);
 }
 
 .ft__chip {
@@ -166,18 +171,19 @@
   max-width: 640px;
 }
 .ft__tag {
-  color: var(--ft-ink-2);
+  color: var(--ft-cyan);
   font-family: var(--ft-display);
   font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .ft__name {
+  margin: 0;
   color: var(--ft-ink);
   font-family: var(--ft-display);
-  font-weight: 700;
-  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
   line-height: 1.1;
 }
 .ft__pitch {
@@ -194,22 +200,25 @@
   gap: 10px;
 }
 .ft__btn {
+  /* Solid cyan primary (matches the mockup); phones never get the hover state, so the main action
+     must read as primary at rest. */
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 0 20px;
-  border: 1px solid var(--ft-cyan);
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--ft-cyan) 12%, transparent);
-  color: var(--ft-cyan);
-  font-family: var(--ft-display);
-  font-weight: 500;
-  font-size: 0.95rem;
+  background: var(--ft-cyan);
+  color: #04181c;
+  font-family: var(--ft-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
   white-space: nowrap;
   transition:
-    background var(--dur-fast, 440ms) var(--ft-ease),
-    color var(--dur-fast, 440ms) var(--ft-ease);
+    box-shadow var(--dur-fast, 440ms) var(--ft-ease),
+    transform var(--dur-fast, 440ms) var(--ft-ease);
 }
 .ft__note {
   color: var(--ft-ink-2);
@@ -217,17 +226,16 @@
   letter-spacing: 0.02em;
 }
 
-/* ---------- Hover (desktop pointers only) ---------- */
+/* ---------- Hover (desktop pointers) + keyboard focus reveal ---------- */
 
 @media (hover: hover) {
-  /* Hover the stationary <li>, not the <a>: the card lifts 4px, so hovering the card
-     itself would drop it out from under the pointer and thrash :hover + play/pause. */
   .ft__item:hover .ft__card {
     border-color: var(--ft-cyan);
     transform: translateY(-4px);
     box-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7);
   }
-  .ft__item:hover .ft__img {
+  .ft__item:hover .ft__img,
+  .ft__item:hover .ft__video {
     transform: scale(1.04);
   }
   .ft__item:hover .ft__video {
@@ -238,14 +246,22 @@
     transform: translateY(0);
   }
   .ft__item:hover .ft__btn {
-    background: var(--ft-cyan);
-    color: #06222a;
+    box-shadow: 0 0 0 4px rgb(34 211 238 / 0.25);
   }
 }
 
 .ft__card:focus-visible {
   outline: 3px solid var(--ft-cyan);
   outline-offset: 3px;
+}
+/* Keyboard users get the same preview as hover. */
+.ft__card:focus-visible .ft__video {
+  opacity: 1;
+  transform: scale(1.04);
+}
+.ft__card:focus-visible .ft__chip {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (min-width: 720px) {
@@ -273,14 +289,18 @@
   .ft__btn {
     transition: none;
   }
-  .ft__card:hover {
+  .ft__item:hover .ft__card {
     transform: none;
   }
-  .ft__card:hover .ft__img {
+  .ft__item:hover .ft__img,
+  .ft__item:hover .ft__video,
+  .ft__card:focus-visible .ft__video {
     transform: none;
   }
-  .ft__card:hover .ft__video,
-  .ft__card:hover .ft__chip {
+  .ft__item:hover .ft__video,
+  .ft__item:hover .ft__chip,
+  .ft__card:focus-visible .ft__video,
+  .ft__card:focus-visible .ft__chip {
     opacity: 0;
   }
 }
